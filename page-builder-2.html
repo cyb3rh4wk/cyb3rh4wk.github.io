@@ -50,16 +50,40 @@
         <![endif]-->
 
         <style>
+            @media only screen and (max-width : 1200px){
+                .resp-vtabs ul.resp-tabs-list {
+                    margin-left: 0 !important;
+                }
+            }
+
             @media only screen and (max-width : 991px){
                 .resp-vtabs .resp-tabs-container {
                     margin-left: 13px;
                 }
             }
+
             @media only screen and (min-width : 800px) and (max-width : 991px){
                 .resp-vtabs .resp-tabs-container {
-                    margin-left: 13px;
                     width:89%;
                 }
+            }
+
+            @media only screen and (max-width : 800px){
+
+                .widget-profil {
+                    float: none !important;
+                }
+                .resp-vtabs .resp-tabs-container {
+                    width:100%;
+                }
+            }
+
+            .widget-profil {
+                float: left;
+            }
+
+            .resp-vtabs ul.resp-tabs-list {
+                margin-left: 12px;
             }			
 
         </style>
@@ -84,7 +108,7 @@
             <li><span>Image 05</span><div></div></li>
             <li><span>Image 06</span><div></div></li>
         </ul> -->
-        <!-- /.slideshow --> 
+        <!-- /.slideshow -->  
 
         <!-- .wrapper --> 
         <div class="wrapper">

@@ -148,6 +148,67 @@
     .role-block:hover {
       background: rgba(68,71,90,0.4) !important;
     }
+
+    /* Hamburger only on mobile */
+    .mobile-only { display: none !important; }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      body { font-size: 13px; }
+
+      /* Boot sequence fits narrow screens */
+      .boot-container { padding: 14px 10px !important; }
+      .boot-line { font-size: 10px !important; line-height: 1.5 !important; }
+      .boot-skip { bottom: 10px !important; right: 10px !important; font-size: 11px !important; padding: 3px 8px !important; }
+
+      /* Hide glitch title; show hamburger */
+      .topbar-title { display: none !important; }
+      .mobile-only { display: flex !important; }
+
+      /* Drawer sidebar */
+      .sidebar-drawer {
+        position: fixed !important;
+        top: 29px !important; left: 0 !important; bottom: 0 !important;
+        z-index: 60 !important;
+        max-width: 300px;
+        box-shadow: 4px 0 16px rgba(0,0,0,0.6);
+      }
+      .sidebar-hidden { display: none !important; }
+      .sidebar-backdrop {
+        position: fixed;
+        top: 29px; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.55);
+        z-index: 55;
+      }
+
+      /* Status bar compact */
+      .statusbar-mid { display: none !important; }
+
+      /* Content padding smaller */
+      .content-area { padding: 12px 14px !important; }
+
+      /* Skill bars compact */
+      .skill-bar { font-size: 11px !important; gap: 6px !important; }
+      .skill-bar-name { min-width: 130px !important; }
+
+      /* Project header wraps */
+      .project-header { flex-wrap: wrap !important; row-gap: 4px !important; }
+      .project-period { margin-right: 0 !important; }
+
+      /* Role/section text compact */
+      .role-title { font-size: 13px !important; }
+      .role-meta { font-size: 12px !important; }
+      .role-highlight { font-size: 12px !important; line-height: 1.55 !important; }
+      .section-heading { font-size: 15px !important; }
+
+      /* Command bar compact */
+      .command-bar { font-size: 13px !important; padding: 6px 10px !important; }
+      .command-bar input { font-size: 13px !important; }
+      .cmd-cursor { width: 8px !important; height: 15px !important; }
+
+      /* Softer scanlines on small screens */
+      .scanlines { opacity: 0.08 !important; }
+    }
   </style>
 </head>
 <body>
@@ -306,34 +367,34 @@
 
       const biosLines = [
         { text: 'SAI MOVVA BIOS v8.0.26', color: DRACULA.cyan, delay: 0 },
-        { text: 'Copyright (C) 2017-2026, Sai Movva Systems Inc.', color: DRACULA.comment, delay: 80 },
-        { text: '', delay: 100 },
-        { text: 'CPU: Principal Software Engineer @ 3.6GHz (8+ cores active)', color: DRACULA.fg, delay: 150 },
-        { text: 'RAM: 256GB Experience Buffer... OK', color: DRACULA.fg, delay: 200 },
-        { text: 'GPU: Creative Problem Solving Unit v4.0... OK', color: DRACULA.fg, delay: 250 },
-        { text: 'NIC: LinkedIn | GitHub | X | Email... LINKED', color: DRACULA.fg, delay: 300 },
-        { text: '', delay: 320 },
-        { text: 'Detecting drives...', color: DRACULA.yellow, delay: 350 },
-        { text: '  /dev/sda1 — Scaler AI Labs (Principal SWE)     [ACTIVE]', color: DRACULA.green, delay: 420 },
-        { text: '  /dev/sda2 — Eightfold.ai (Eng Leader)          [MOUNTED]', color: DRACULA.fg, delay: 470 },
-        { text: '  /dev/sda3 — Scaler (Director of Eng)            [MOUNTED]', color: DRACULA.fg, delay: 520 },
-        { text: '  /dev/sda4 — BITS Pilani (B.E. CS Hons)          [READONLY]', color: DRACULA.comment, delay: 570 },
-        { text: '', delay: 590 },
-        { text: 'All systems nominal. Booting kernel...', color: DRACULA.purple, delay: 650 },
+        { text: 'Copyright (C) 2017-2026, Sai Movva Systems Inc.', color: DRACULA.comment, delay: 200 },
+        { text: '', delay: 250 },
+        { text: 'CPU: Principal Software Engineer @ 3.6GHz (8+ cores active)', color: DRACULA.fg, delay: 380 },
+        { text: 'RAM: 256GB Experience Buffer... OK', color: DRACULA.fg, delay: 500 },
+        { text: 'GPU: Creative Problem Solving Unit v4.0... OK', color: DRACULA.fg, delay: 630 },
+        { text: 'NIC: LinkedIn | GitHub | X | Email... LINKED', color: DRACULA.fg, delay: 750 },
+        { text: '', delay: 800 },
+        { text: 'Detecting drives...', color: DRACULA.yellow, delay: 880 },
+        { text: '  /dev/sda1 — Scaler AI Labs (Principal SWE)     [ACTIVE]', color: DRACULA.green, delay: 1050 },
+        { text: '  /dev/sda2 — Eightfold.ai (Eng Leader)          [MOUNTED]', color: DRACULA.fg, delay: 1180 },
+        { text: '  /dev/sda3 — Scaler (Director of Eng)            [MOUNTED]', color: DRACULA.fg, delay: 1300 },
+        { text: '  /dev/sda4 — BITS Pilani (B.E. CS Hons)          [READONLY]', color: DRACULA.comment, delay: 1430 },
+        { text: '', delay: 1480 },
+        { text: 'All systems nominal. Booting kernel...', color: DRACULA.purple, delay: 1630 },
       ];
 
       const kernelLines = [
         { text: '[    0.000000] Linux sai-movva 8.0.26-principal #1 SMP', color: DRACULA.fg, delay: 0 },
-        { text: '[    0.001337] Loading modules: ruby python node golang react...', color: DRACULA.fg, delay: 60 },
-        { text: '[    0.004200] AI subsystem: LLMs RL-environments MCP agents... OK', color: DRACULA.green, delay: 120 },
-        { text: '[    0.005000] Cloud provider: AWS GCP... CONNECTED', color: DRACULA.green, delay: 170 },
-        { text: '[    0.006900] DevOps pipeline: terraform jenkins k8s... READY', color: DRACULA.green, delay: 220 },
-        { text: '[    0.007777] Leadership module: 30-engineer capacity... LOADED', color: DRACULA.cyan, delay: 280 },
-        { text: '[    0.008500] Scaling to >50K concurrent sandboxes... OK', color: DRACULA.green, delay: 340 },
-        { text: '[    0.009001] Cost optimization daemon: -35% AWS, -95% transcription', color: DRACULA.yellow, delay: 390 },
-        { text: '[    0.009500] Achievement unlocked: Intern → Director in 7 years', color: DRACULA.pink, delay: 450 },
-        { text: '[    0.009999] All services started.', color: DRACULA.green, delay: 520 },
-        { text: '', delay: 540 },
+        { text: '[    0.001337] Loading modules: ruby python node golang react...', color: DRACULA.fg, delay: 150 },
+        { text: '[    0.004200] AI subsystem: LLMs RL-environments MCP agents... OK', color: DRACULA.green, delay: 300 },
+        { text: '[    0.005000] Cloud provider: AWS GCP... CONNECTED', color: DRACULA.green, delay: 430 },
+        { text: '[    0.006900] DevOps pipeline: terraform jenkins k8s... READY', color: DRACULA.green, delay: 550 },
+        { text: '[    0.007777] Leadership module: 30-engineer capacity... LOADED', color: DRACULA.cyan, delay: 700 },
+        { text: '[    0.008500] Scaling to >50K concurrent sandboxes... OK', color: DRACULA.green, delay: 850 },
+        { text: '[    0.009001] Cost optimization daemon: -35% AWS, -95% transcription', color: DRACULA.yellow, delay: 980 },
+        { text: '[    0.009500] Achievement unlocked: Intern → Director in 7 years', color: DRACULA.pink, delay: 1130 },
+        { text: '[    0.009999] All services started.', color: DRACULA.green, delay: 1300 },
+        { text: '', delay: 1350 },
       ];
 
       const containerRef = React.useRef(null);
@@ -357,7 +418,7 @@
           } else {
             setPhase('login');
           }
-        }, lastDelay + 300);
+        }, lastDelay + 750);
         timeouts.push(t);
 
         return () => timeouts.forEach(clearTimeout);
@@ -371,14 +432,14 @@
 
       React.useEffect(() => {
         if (phase === 'login') {
-          const t = setTimeout(() => setLoginDone(true), 800);
+          const t = setTimeout(() => setLoginDone(true), 2000);
           return () => clearTimeout(t);
         }
       }, [phase]);
 
       React.useEffect(() => {
         if (loginDone) {
-          const t = setTimeout(onComplete, 600);
+          const t = setTimeout(onComplete, 1500);
           return () => clearTimeout(t);
         }
       }, [loginDone]);
@@ -405,28 +466,30 @@
       };
 
       return React.createElement('div', {
-        style: bootStyles.container, ref: containerRef, onClick: handleSkip
+        style: bootStyles.container, ref: containerRef, onClick: handleSkip,
+        className: 'boot-container'
       },
         lines.map((line, i) =>
           React.createElement('div', {
             key: `${phase}-${i}`, style: { ...bootStyles.line, color: line.color || DRACULA.fg },
-            className: 'boot-line-enter'
+            className: 'boot-line-enter boot-line'
           }, line.text || '\u00A0')
         ),
         phase === 'login' && React.createElement('div', { style: bootStyles.loginBox },
-          React.createElement('div', { style: { ...bootStyles.line, color: DRACULA.green } },
+          React.createElement('div', { style: { ...bootStyles.line, color: DRACULA.green }, className: 'boot-line' },
             'sai@portfolio:~$ ',
             loginDone ? 'startx' : '',
             !loginDone && React.createElement(Cursor, { color: DRACULA.green })
           ),
           loginDone && React.createElement('div', {
             style: { ...bootStyles.line, color: DRACULA.purple, marginTop: '4px' },
-            className: 'boot-line-enter'
+            className: 'boot-line-enter boot-line'
           }, 'Initializing terminal environment...')
         ),
-        React.createElement('button', { style: bootStyles.skip, onClick: e => { e.stopPropagation(); onComplete(); } },
-          'SKIP [ESC]'
-        )
+        React.createElement('button', {
+          style: bootStyles.skip, className: 'boot-skip',
+          onClick: e => { e.stopPropagation(); onComplete(); }
+        }, 'SKIP [ESC]')
       );
     }
 
@@ -562,7 +625,7 @@
         React.createElement('div', { style: { color: DRACULA.green, marginBottom: '4px' } },
           'sai@portfolio:~$ ', React.createElement('span', { style: { color: DRACULA.fg } }, 'cat experience.log')
         ),
-        React.createElement('div', { style: { margin: '8px 0 4px', color: DRACULA.pink, fontSize: '18px', fontWeight: 'bold' } },
+        React.createElement('div', { className: 'section-heading', style: { margin: '8px 0 4px', color: DRACULA.pink, fontSize: '18px', fontWeight: 'bold' } },
           '═══ CAREER TIMELINE ═══'
         ),
         React.createElement('div', { style: { color: DRACULA.comment, marginBottom: '12px', fontSize: '14px' } },
@@ -581,8 +644,8 @@
             onMouseEnter: e => e.currentTarget.style.background = 'rgba(68,71,90,0.4)',
             onMouseLeave: e => e.currentTarget.style.background = 'rgba(68,71,90,0.2)',
           },
-            React.createElement('div', { style: { color: role.color, fontWeight: 'bold', fontSize: '15px' } }, role.title),
-            React.createElement('div', { style: { color: DRACULA.fg, fontSize: '14px', margin: '2px 0' } },
+            React.createElement('div', { className: 'role-title', style: { color: role.color, fontWeight: 'bold', fontSize: '15px' } }, role.title),
+            React.createElement('div', { className: 'role-meta', style: { color: DRACULA.fg, fontSize: '14px', margin: '2px 0' } },
               role.company, '  ',
               React.createElement('span', { style: { color: DRACULA.comment } }, role.period)
             ),
@@ -590,6 +653,7 @@
               role.highlights.map((h, j) =>
                 React.createElement('div', {
                   key: j,
+                  className: 'role-highlight',
                   style: { color: DRACULA.fg, fontSize: '14px', lineHeight: '1.65', opacity: 0.9, margin: '2px 0' }
                 }, h)
               )
@@ -665,7 +729,7 @@
         React.createElement('div', { style: { color: DRACULA.green, marginBottom: '4px' } },
           'sai@portfolio:~$ ', React.createElement('span', { style: { color: DRACULA.fg } }, 'htop --skills')
         ),
-        React.createElement('div', { style: { margin: '8px 0 12px', color: DRACULA.pink, fontSize: '18px', fontWeight: 'bold' } },
+        React.createElement('div', { className: 'section-heading', style: { margin: '8px 0 12px', color: DRACULA.pink, fontSize: '18px', fontWeight: 'bold' } },
           '═══ SKILL PROFICIENCY MONITOR ═══'
         ),
         categories.map((cat, ci) =>
@@ -694,9 +758,10 @@
       const color = level >= 90 ? DRACULA.green : level >= 80 ? DRACULA.cyan : DRACULA.yellow;
 
       return React.createElement('div', {
+        className: 'skill-bar',
         style: { display: 'flex', alignItems: 'center', fontSize: '14px', lineHeight: '1.8', gap: '8px' }
       },
-        React.createElement('span', { style: { color: DRACULA.fg, minWidth: '250px', opacity: 0.9 } }, name),
+        React.createElement('span', { className: 'skill-bar-name', style: { color: DRACULA.fg, minWidth: '250px', opacity: 0.9 } }, name),
         React.createElement('span', { style: { color } }, '[' + '█'.repeat(filled) + '░'.repeat(empty) + ']'),
         React.createElement('span', { style: { color: DRACULA.comment, minWidth: '32px', textAlign: 'right' } }, `${animated}%`)
       );
@@ -735,7 +800,7 @@
         React.createElement('div', { style: { color: DRACULA.green, marginBottom: '4px' } },
           'sai@portfolio:~$ ', React.createElement('span', { style: { color: DRACULA.fg } }, 'cat .contact')
         ),
-        React.createElement('div', { style: { margin: '12px 0', color: DRACULA.pink, fontSize: '18px', fontWeight: 'bold' } },
+        React.createElement('div', { className: 'section-heading', style: { margin: '12px 0', color: DRACULA.pink, fontSize: '18px', fontWeight: 'bold' } },
           '═══ REACH OUT ═══'
         ),
         React.createElement('div', { style: { margin: '16px 0' } },
@@ -769,7 +834,7 @@
         React.createElement('div', { style: { color: DRACULA.green, marginBottom: '4px' } },
           'sai@portfolio:~$ ', React.createElement('span', { style: { color: DRACULA.fg } }, 'ls blog/')
         ),
-        React.createElement('div', { style: { margin: '12px 0', color: DRACULA.pink, fontSize: '18px', fontWeight: 'bold' } },
+        React.createElement('div', { className: 'section-heading', style: { margin: '12px 0', color: DRACULA.pink, fontSize: '18px', fontWeight: 'bold' } },
           '═══ WRITING & THOUGHTS ═══'
         ),
         React.createElement('div', { style: { color: DRACULA.yellow, fontSize: '15px', margin: '16px 0', padding: '12px', border: `1px dashed ${DRACULA.comment}` } },
@@ -946,7 +1011,7 @@
         React.createElement('div', { style: { color: DRACULA.green, marginBottom: '4px' } },
           'sai@portfolio:~$ ', React.createElement('span', { style: { color: DRACULA.fg } }, 'ls -la projects/')
         ),
-        React.createElement('div', { style: { margin: '8px 0 12px', color: DRACULA.pink, fontSize: '18px', fontWeight: 'bold' } },
+        React.createElement('div', { className: 'section-heading', style: { margin: '8px 0 12px', color: DRACULA.pink, fontSize: '18px', fontWeight: 'bold' } },
           '═══ KEY PROJECTS ═══'
         ),
         projects.map((proj, i) =>
@@ -961,9 +1026,9 @@
             onMouseEnter: e => { e.currentTarget.style.borderColor = proj.color; e.currentTarget.style.background = 'rgba(68,71,90,0.3)'; },
             onMouseLeave: e => { e.currentTarget.style.borderColor = DRACULA.currentLine; e.currentTarget.style.background = 'rgba(68,71,90,0.15)'; },
           },
-            React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
+            React.createElement('div', { className: 'project-header', style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
               React.createElement('span', { style: { color: DRACULA.cyan, fontWeight: 'bold', fontSize: '15px' } }, proj.name),
-              React.createElement('span', { style: { color: DRACULA.comment, fontSize: '12px', marginLeft: '8px', marginRight: 'auto' } }, proj.period),
+              React.createElement('span', { className: 'project-period', style: { color: DRACULA.comment, fontSize: '12px', marginLeft: '8px', marginRight: 'auto' } }, proj.period),
               React.createElement('span', {
                 style: {
                   color: proj.color, fontSize: '12px', padding: '2px 6px',
@@ -1057,7 +1122,7 @@
       const [showNeofetch, setShowNeofetch] = React.useState(false);
       const [showMatrix, setShowMatrix] = React.useState(false);
       const [statusMsg, setStatusMsg] = React.useState('');
-      const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
+      const [sidebarCollapsed, setSidebarCollapsed] = React.useState(() => window.innerWidth < 768);
       const contentRef = React.useRef(null);
       const inputRef = React.useRef(null);
 
@@ -1184,7 +1249,7 @@
               React.createElement('span', { style: { color: DRACULA.orange } }, 'AI/ML ◆ Platform ◆ Leadership ◆ Product @ max-clock'),
             ),
           ),
-          React.createElement('div', { style: { margin: '16px 0 8px', color: DRACULA.pink, fontSize: '18px', fontWeight: 'bold' } }, '═══ ACTIVE SERVICES ═══'),
+          React.createElement('div', { className: 'section-heading', style: { margin: '16px 0 8px', color: DRACULA.pink, fontSize: '18px', fontWeight: 'bold' } }, '═══ ACTIVE SERVICES ═══'),
           services.map((svc, i) =>
             React.createElement('div', {
               key: i,
@@ -1217,7 +1282,10 @@
         return Component ? React.createElement(Component) : null;
       };
 
-      const sidebarWidth = sidebarCollapsed ? '40px' : (winWidth > 1600 ? '320px' : winWidth > 1200 ? '280px' : '240px');
+      const isMobile = winWidth < 768;
+      const sidebarWidth = sidebarCollapsed
+        ? (isMobile ? '0' : '40px')
+        : (isMobile ? '85vw' : winWidth > 1600 ? '320px' : winWidth > 1200 ? '280px' : '240px');
 
       const termStyles = {
         wrapper: {
@@ -1326,21 +1394,43 @@
         });
       };
 
-      return React.createElement('div', { style: termStyles.wrapper, onClick: focusInput },
+      return React.createElement('div', {
+        style: termStyles.wrapper,
+        onClick: isMobile ? undefined : focusInput,
+      },
         React.createElement('div', { style: termStyles.topBar },
           React.createElement('div', { style: { display: 'flex', gap: '12px', alignItems: 'center' } },
+            React.createElement('button', {
+              className: 'mobile-only',
+              onClick: (e) => { e.stopPropagation(); setSidebarCollapsed(v => !v); },
+              style: {
+                background: 'transparent', border: 'none', color: DRACULA.cyan,
+                fontSize: '18px', padding: '2px 6px', cursor: 'pointer',
+                fontFamily: "'Fira Code', monospace", alignItems: 'center',
+              },
+              'aria-label': 'Toggle menu',
+            }, sidebarCollapsed ? '☰' : '✕'),
             React.createElement('span', { style: { color: DRACULA.green } }, '⬤'),
             React.createElement('span', { style: { color: DRACULA.yellow } }, '⬤'),
             React.createElement('span', { style: { color: DRACULA.red } }, '⬤'),
             React.createElement('span', { style: { color: DRACULA.comment, marginLeft: '8px' } }, 'sai@portfolio: ~'),
           ),
-          React.createElement('div', { style: { color: DRACULA.comment } },
+          React.createElement('div', { style: { color: DRACULA.comment }, className: 'topbar-title' },
             React.createElement(GlitchText, null, 'SAI MOVVA — Principal Software Engineer')
           )
         ),
 
         React.createElement('div', { style: termStyles.body },
-          React.createElement('div', { style: termStyles.sidebar },
+          isMobile && !sidebarCollapsed && React.createElement('div', {
+            className: 'sidebar-backdrop',
+            onClick: () => setSidebarCollapsed(true),
+          }),
+          React.createElement('div', {
+            style: termStyles.sidebar,
+            className: isMobile
+              ? (sidebarCollapsed ? 'sidebar-hidden' : 'sidebar-drawer')
+              : '',
+          },
             React.createElement('div', {
               style: termStyles.sidebarHeader,
               onClick: () => setSidebarCollapsed(prev => !prev)
@@ -1355,7 +1445,12 @@
                   React.createElement('div', {
                     key: section.id,
                     style: termStyles.navItem(activeSection === section.id),
-                    onClick: () => { setActiveSection(section.id); setShowNeofetch(false); setStatusMsg(''); },
+                    onClick: () => {
+                      setActiveSection(section.id);
+                      setShowNeofetch(false);
+                      setStatusMsg('');
+                      if (isMobile) setSidebarCollapsed(true);
+                    },
                     onMouseEnter: e => { if (activeSection !== section.id) e.currentTarget.style.background = 'rgba(68,71,90,0.3)'; },
                     onMouseLeave: e => { if (activeSection !== section.id) e.currentTarget.style.background = 'transparent'; },
                   },
@@ -1369,7 +1464,7 @@
                     React.createElement('div', {
                       key: cmd,
                       style: { padding: '4px 12px', cursor: 'pointer', fontSize: '15px', color: DRACULA.orange, transition: 'color 0.15s' },
-                      onClick: () => executeCommand(cmd),
+                      onClick: () => { executeCommand(cmd); if (isMobile) setSidebarCollapsed(true); },
                       onMouseEnter: e => e.currentTarget.style.color = DRACULA.pink,
                       onMouseLeave: e => e.currentTarget.style.color = DRACULA.orange,
                     }, `$ ${cmd}`)
@@ -1417,7 +1512,7 @@
             )
           ),
 
-          React.createElement('div', { style: termStyles.content, ref: contentRef },
+          React.createElement('div', { style: termStyles.content, ref: contentRef, className: 'content-area' },
             React.createElement('div', { className: 'content-fade-in', key: activeSection }, renderContent())
           )
         ),
@@ -1429,7 +1524,7 @@
           }
         }, statusMsg),
 
-        React.createElement('div', { style: termStyles.commandBar },
+        React.createElement('div', { style: termStyles.commandBar, className: 'command-bar' },
           React.createElement('span', { style: { color: DRACULA.green, marginRight: '4px' } }, 'sai@portfolio'),
           React.createElement('span', { style: { color: DRACULA.fg, marginRight: '4px' } }, ':'),
           React.createElement('span', { style: { color: DRACULA.cyan, marginRight: '4px' } }, '~'),
@@ -1446,7 +1541,7 @@
                 caretColor: 'transparent',
               },
               placeholder: "type 'help' for commands...",
-              autoFocus: true,
+              autoFocus: !isMobile,
               spellCheck: false,
               autoComplete: 'off',
             }),
@@ -1459,7 +1554,7 @@
 
         React.createElement('div', { style: termStyles.statusBar },
           React.createElement('span', null, `[0] sai@portfolio`),
-          React.createElement('span', null, `${activeSection}.view`),
+          React.createElement('span', { className: 'statusbar-mid' }, `${activeSection}.view`),
           React.createElement('span', null, `"sai@portfolio" ${SECTIONS.length} panes`)
         ),
 

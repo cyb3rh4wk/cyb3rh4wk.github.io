@@ -1,1292 +1,1507 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sai Movva — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body, #root { height: 100%; width: 100%; overflow: hidden; }
+    body {
+      background: #282a36;
+      font-family: 'Fira Code', monospace;
+      color: #f8f8f2;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+    }
 
-        <title>Sai Movva</title>
+    /* Cosmos background */
+    #cosmos-bg {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: -1; overflow: hidden;
+      background: radial-gradient(ellipse at 20% 50%, #1a1033 0%, transparent 50%),
+                  radial-gradient(ellipse at 80% 20%, #0d1b2a 0%, transparent 50%),
+                  radial-gradient(ellipse at 50% 80%, #1b0a2e 0%, transparent 50%),
+                  #0c0c1a;
+    }
+    #cosmos-bg canvas {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    }
+    #cosmos-bg .nebula {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(ellipse at 30% 40%, rgba(189,147,249,0.06) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 60%, rgba(139,233,253,0.04) 0%, transparent 50%),
+                  radial-gradient(ellipse at 50% 30%, rgba(255,121,198,0.04) 0%, transparent 55%);
+      filter: blur(40px);
+      animation: nebulaShift 30s ease-in-out infinite alternate;
+    }
+    @keyframes nebulaShift {
+      0% { transform: scale(1) translate(0, 0); opacity: 0.8; }
+      50% { transform: scale(1.05) translate(10px, -10px); opacity: 1; }
+      100% { transform: scale(1) translate(-10px, 10px); opacity: 0.8; }
+    }
 
-        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #21222c; }
+    ::-webkit-scrollbar-thumb { background: #44475a; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #6272a4; }
 
-        <meta name="description" content="About Me | Sai Movva"/>
+    /* Boot line animation */
+    .boot-line-enter {
+      animation: bootLineIn 0.1s ease-out;
+    }
+    @keyframes bootLineIn {
+      from { opacity: 0; transform: translateX(-4px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
 
-        <!-- CSS | bootstrap -->
-        <!-- Credits: http://getbootstrap.com/ -->
-        <link  rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    /* CRT flicker */
+    @keyframes crtFlicker {
+      0% { opacity: 0.02; }
+      5% { opacity: 0.04; }
+      10% { opacity: 0.01; }
+      15% { opacity: 0.03; }
+      20% { opacity: 0.02; }
+      100% { opacity: 0.02; }
+    }
 
-        <!-- CSS | font-awesome -->
-        <!-- Credits: http://fortawesome.github.io/Font-Awesome/icons/ -->
-        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
+    /* Content fade in */
+    .content-fade-in {
+      animation: contentIn 0.3s ease-out;
+    }
+    @keyframes contentIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-        <!-- CSS | animate -->
-        <!-- Credits: http://daneden.github.io/animate.css/ -->
-        <link rel="stylesheet" type="text/css" href="css/animate.min.css" />
+    /* Glitch effect */
+    .glitch-active {
+      animation: glitch 0.2s linear;
+    }
+    @keyframes glitch {
+      0% { transform: translate(0); }
+      20% { transform: translate(-2px, 1px); filter: hue-rotate(90deg); }
+      40% { transform: translate(2px, -1px); filter: hue-rotate(180deg); }
+      60% { transform: translate(-1px, -1px); filter: hue-rotate(270deg); }
+      80% { transform: translate(1px, 2px); }
+      100% { transform: translate(0); }
+    }
 
-        <!-- CSS | Normalize -->
-        <!-- Credits: http://manos.malihu.gr/jquery-custom-content-scroller -->
-        <link rel="stylesheet" type="text/css" href="css/jquery.mCustomScrollbar.css" />
+    /* Scanline overlay - very subtle */
+    .scanlines {
+      opacity: 0.15 !important;
+    }
 
-        <!-- CSS | Colors -->
-        <link rel="stylesheet" type="text/css" href="css/colors/DarkBlue.css" />
+    /* Selection */
+    ::selection {
+      background: #44475a;
+      color: #ff79c6;
+    }
 
-        <!-- CSS | Style -->
-        <!-- Credits: http://themeforest.net/user/FlexyCodes -->
-        <link rel="stylesheet" type="text/css" href="css/main.css" />
+    /* Fade from boot to terminal */
+    .terminal-enter {
+      animation: terminalFadeIn 0.6s ease-out;
+    }
+    @keyframes terminalFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
 
-        <!-- CSS | prettyPhoto -->
-        <!-- Credits: http://www.no-margin-for-errors.com/ -->
-        <link rel="stylesheet" type="text/css" href="css/prettyPhoto.css"/>
+    /* Responsive */
+    @media (max-width: 700px) {
+      .sidebar-desktop { display: none !important; }
+    }
 
-        <!-- CSS | Google Fonts -->
-        <link href='http://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css'>
-        <!-- Favicon
-        <link rel="shortcut icon" type="image/x-icon" href="images/favicon/favicon.ico">-->
+    /* Blinking block cursor like Warp terminal */
+    input {
+      caret-color: transparent !important;
+    }
+    .cmd-input-wrapper {
+      position: relative;
+      flex: 1;
+      display: flex;
+    }
+    .cmd-cursor {
+      display: inline-block;
+      width: 9px;
+      height: 17px;
+      background: #50fa7b;
+      animation: blockBlink 1s step-end infinite;
+      vertical-align: text-bottom;
+      margin-left: -1px;
+      position: absolute;
+      pointer-events: none;
+    }
+    @keyframes blockBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    input::placeholder {
+      color: #6272a4;
+      opacity: 0.6;
+    }
 
-        <!--[if IE 7]>
-                <link rel="stylesheet" type="text/css" href="css/icons/font-awesome-ie7.min.css"/>
-        <![endif]-->
+    /* Skill bar animation */
+    .role-block:hover {
+      background: rgba(68,71,90,0.4) !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="cosmos-bg">
+    <canvas id="star-canvas"></canvas>
+    <div class="nebula"></div>
+  </div>
+  <div id="root"></div>
 
-        <style>
-            @media only screen and (max-width : 991px){
-                .resp-vtabs .resp-tabs-container {
-                    margin-left: 13px;
+  <script>
+    // Star field
+    (function() {
+      const canvas = document.getElementById('star-canvas');
+      const ctx = canvas.getContext('2d');
+      let stars = [];
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        stars = [];
+        for (let i = 0; i < 200; i++) {
+          stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            r: Math.random() * 1.5 + 0.3,
+            a: Math.random(),
+            speed: Math.random() * 0.005 + 0.002,
+            phase: Math.random() * Math.PI * 2,
+          });
+        }
+      }
+      function draw(t) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        stars.forEach(s => {
+          const twinkle = 0.4 + 0.6 * Math.sin(t * s.speed + s.phase);
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(248, 248, 242, ${s.a * twinkle})`;
+          ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+      requestAnimationFrame(draw);
+    })();
+  </script>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel">
+    // =========================================================================
+    // effects.jsx — Dracula palette, typing hook, cursor, scanlines, CRT, glitch
+    // =========================================================================
+    const DRACULA = {
+      bg: '#282a36',
+      currentLine: '#44475a',
+      fg: '#f8f8f2',
+      comment: '#6272a4',
+      cyan: '#8be9fd',
+      green: '#50fa7b',
+      orange: '#ffb86c',
+      pink: '#ff79c6',
+      purple: '#bd93f9',
+      red: '#ff5555',
+      yellow: '#f1fa8c',
+      selection: '#44475a',
+      bgDarker: '#21222c',
+      bgLighter: '#343746',
+    };
+
+    function useTypingEffect(text, speed = 30, startDelay = 0, enabled = true) {
+      const [displayed, setDisplayed] = React.useState('');
+      const [done, setDone] = React.useState(false);
+
+      React.useEffect(() => {
+        if (!enabled) { setDisplayed(''); setDone(false); return; }
+        let i = 0;
+        setDisplayed('');
+        setDone(false);
+        const startTimeout = setTimeout(() => {
+          const interval = setInterval(() => {
+            i++;
+            setDisplayed(text.slice(0, i));
+            if (i >= text.length) { clearInterval(interval); setDone(true); }
+          }, speed);
+          return () => clearInterval(interval);
+        }, startDelay);
+        return () => clearTimeout(startTimeout);
+      }, [text, speed, startDelay, enabled]);
+
+      return { displayed, done };
+    }
+
+    function Cursor({ color = DRACULA.green }) {
+      const [visible, setVisible] = React.useState(true);
+      React.useEffect(() => {
+        const i = setInterval(() => setVisible(v => !v), 530);
+        return () => clearInterval(i);
+      }, []);
+      return React.createElement('span', {
+        style: { color, opacity: visible ? 1 : 0, fontWeight: 'bold' }
+      }, '█');
+    }
+
+    function Scanlines() {
+      return React.createElement('div', {
+        className: 'scanlines',
+        style: {
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          pointerEvents: 'none', zIndex: 9999,
+          background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px)',
+        }
+      });
+    }
+
+    function CRTFlicker() {
+      return React.createElement('div', {
+        className: 'crt-flicker',
+        style: {
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          pointerEvents: 'none', zIndex: 9998,
+          animation: 'crtFlicker 0.15s infinite',
+          background: 'radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.25) 100%)',
+        }
+      });
+    }
+
+    function GlitchText({ children, style = {} }) {
+      const [glitching, setGlitching] = React.useState(false);
+
+      React.useEffect(() => {
+        const trigger = () => {
+          setGlitching(true);
+          setTimeout(() => setGlitching(false), 200);
+        };
+        const i = setInterval(trigger, 4000 + Math.random() * 6000);
+        return () => clearInterval(i);
+      }, []);
+
+      return React.createElement('span', {
+        className: glitching ? 'glitch-active' : '',
+        style: { position: 'relative', display: 'inline-block', ...style },
+        'data-text': children,
+      }, children);
+    }
+
+    // =========================================================================
+    // boot.jsx — BIOS + kernel boot sequence
+    // =========================================================================
+    function BootSequence({ onComplete }) {
+      const [lines, setLines] = React.useState([]);
+      const [phase, setPhase] = React.useState('bios');
+      const [loginDone, setLoginDone] = React.useState(false);
+
+      const biosLines = [
+        { text: 'SAI MOVVA BIOS v8.0.26', color: DRACULA.cyan, delay: 0 },
+        { text: 'Copyright (C) 2017-2026, Sai Movva Systems Inc.', color: DRACULA.comment, delay: 80 },
+        { text: '', delay: 100 },
+        { text: 'CPU: Principal Software Engineer @ 3.6GHz (8+ cores active)', color: DRACULA.fg, delay: 150 },
+        { text: 'RAM: 256GB Experience Buffer... OK', color: DRACULA.fg, delay: 200 },
+        { text: 'GPU: Creative Problem Solving Unit v4.0... OK', color: DRACULA.fg, delay: 250 },
+        { text: 'NIC: LinkedIn | GitHub | X | Email... LINKED', color: DRACULA.fg, delay: 300 },
+        { text: '', delay: 320 },
+        { text: 'Detecting drives...', color: DRACULA.yellow, delay: 350 },
+        { text: '  /dev/sda1 — Scaler AI Labs (Principal SWE)     [ACTIVE]', color: DRACULA.green, delay: 420 },
+        { text: '  /dev/sda2 — Eightfold.ai (Eng Leader)          [MOUNTED]', color: DRACULA.fg, delay: 470 },
+        { text: '  /dev/sda3 — Scaler (Director of Eng)            [MOUNTED]', color: DRACULA.fg, delay: 520 },
+        { text: '  /dev/sda4 — BITS Pilani (B.E. CS Hons)          [READONLY]', color: DRACULA.comment, delay: 570 },
+        { text: '', delay: 590 },
+        { text: 'All systems nominal. Booting kernel...', color: DRACULA.purple, delay: 650 },
+      ];
+
+      const kernelLines = [
+        { text: '[    0.000000] Linux sai-movva 8.0.26-principal #1 SMP', color: DRACULA.fg, delay: 0 },
+        { text: '[    0.001337] Loading modules: ruby python node golang react...', color: DRACULA.fg, delay: 60 },
+        { text: '[    0.004200] AI subsystem: LLMs RL-environments MCP agents... OK', color: DRACULA.green, delay: 120 },
+        { text: '[    0.005000] Cloud provider: AWS GCP... CONNECTED', color: DRACULA.green, delay: 170 },
+        { text: '[    0.006900] DevOps pipeline: terraform jenkins k8s... READY', color: DRACULA.green, delay: 220 },
+        { text: '[    0.007777] Leadership module: 30-engineer capacity... LOADED', color: DRACULA.cyan, delay: 280 },
+        { text: '[    0.008500] Scaling to >50K concurrent sandboxes... OK', color: DRACULA.green, delay: 340 },
+        { text: '[    0.009001] Cost optimization daemon: -35% AWS, -95% transcription', color: DRACULA.yellow, delay: 390 },
+        { text: '[    0.009500] Achievement unlocked: Intern → Director in 7 years', color: DRACULA.pink, delay: 450 },
+        { text: '[    0.009999] All services started.', color: DRACULA.green, delay: 520 },
+        { text: '', delay: 540 },
+      ];
+
+      const containerRef = React.useRef(null);
+
+      React.useEffect(() => {
+        let timeouts = [];
+        const currentLines = phase === 'bios' ? biosLines : kernelLines;
+
+        currentLines.forEach((line) => {
+          const t = setTimeout(() => {
+            setLines(prev => [...prev, line]);
+          }, line.delay);
+          timeouts.push(t);
+        });
+
+        const lastDelay = currentLines[currentLines.length - 1].delay;
+        const t = setTimeout(() => {
+          if (phase === 'bios') {
+            setLines([]);
+            setPhase('kernel');
+          } else {
+            setPhase('login');
+          }
+        }, lastDelay + 300);
+        timeouts.push(t);
+
+        return () => timeouts.forEach(clearTimeout);
+      }, [phase]);
+
+      React.useEffect(() => {
+        if (containerRef.current) {
+          containerRef.current.scrollTop = containerRef.current.scrollHeight;
+        }
+      }, [lines]);
+
+      React.useEffect(() => {
+        if (phase === 'login') {
+          const t = setTimeout(() => setLoginDone(true), 800);
+          return () => clearTimeout(t);
+        }
+      }, [phase]);
+
+      React.useEffect(() => {
+        if (loginDone) {
+          const t = setTimeout(onComplete, 600);
+          return () => clearTimeout(t);
+        }
+      }, [loginDone]);
+
+      const handleSkip = () => onComplete();
+
+      const bootStyles = {
+        container: {
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(12, 12, 12, 0.95)', fontFamily: "'Fira Code', monospace",
+          padding: '24px 32px', overflow: 'hidden', cursor: 'pointer',
+          display: 'flex', flexDirection: 'column', zIndex: 10000,
+        },
+        line: { margin: '1px 0', fontSize: '15px', lineHeight: '1.6', whiteSpace: 'pre' },
+        skip: {
+          position: 'absolute', bottom: '20px', right: '24px',
+          color: DRACULA.comment, fontSize: '14px',
+          border: `1px solid ${DRACULA.comment}`, padding: '4px 12px',
+          background: 'transparent', cursor: 'pointer', fontFamily: "'Fira Code', monospace",
+        },
+        loginBox: {
+          marginTop: '16px', padding: '8px 0',
+        },
+      };
+
+      return React.createElement('div', {
+        style: bootStyles.container, ref: containerRef, onClick: handleSkip
+      },
+        lines.map((line, i) =>
+          React.createElement('div', {
+            key: `${phase}-${i}`, style: { ...bootStyles.line, color: line.color || DRACULA.fg },
+            className: 'boot-line-enter'
+          }, line.text || '\u00A0')
+        ),
+        phase === 'login' && React.createElement('div', { style: bootStyles.loginBox },
+          React.createElement('div', { style: { ...bootStyles.line, color: DRACULA.green } },
+            'sai@portfolio:~$ ',
+            loginDone ? 'startx' : '',
+            !loginDone && React.createElement(Cursor, { color: DRACULA.green })
+          ),
+          loginDone && React.createElement('div', {
+            style: { ...bootStyles.line, color: DRACULA.purple, marginTop: '4px' },
+            className: 'boot-line-enter'
+          }, 'Initializing terminal environment...')
+        ),
+        React.createElement('button', { style: bootStyles.skip, onClick: e => { e.stopPropagation(); onComplete(); } },
+          'SKIP [ESC]'
+        )
+      );
+    }
+
+    // =========================================================================
+    // sections.jsx — content sections
+    // =========================================================================
+    function SectionAbout() {
+      const lines = [
+        { prompt: true, cmd: 'cat about.md' },
+        { text: '' },
+        { text: '# whoami', color: DRACULA.pink },
+        { text: '' },
+        { text: 'Sai Movva (cyb3rh4wk)', color: DRACULA.cyan, heading: true },
+        { text: '' },
+        { text: 'Hands-on Geek with 8+ years of experience, transforming from' },
+        { text: 'an Intern to Director of Engineering & Principal Software Engineer.' },
+        { text: '' },
+        { text: 'Thrived in fast-paced startups with high ownership environments,', color: DRACULA.fg },
+        { text: 'leading diverse teams of up to 30 engineers.', color: DRACULA.fg },
+        { text: '' },
+        { text: 'Diverse skill set encompassing:', color: DRACULA.comment },
+        { text: '', color: DRACULA.comment },
+        { text: '  ◆ Technology        ◆ Product Management', color: DRACULA.cyan },
+        { text: '  ◆ Leadership        ◆ Business Strategy', color: DRACULA.cyan },
+        { text: '  ◆ AI/ML Research    ◆ Post-Training (SFT/RL)', color: DRACULA.cyan },
+        { text: '' },
+        { text: 'Currently fascinated by Dr. Fei-Fei Li\'s work on World Models —', color: DRACULA.orange },
+        { text: 'tinkering with multi-modal model architectures with the goal', color: DRACULA.orange },
+        { text: 'of contributing to research in world models, the next leap', color: DRACULA.orange },
+        { text: 'toward ASI.', color: DRACULA.orange },
+        { text: '' },
+        { text: '"Intern → Director in 7 years. Still shipping code."', color: DRACULA.green },
+      ];
+
+      return React.createElement(TerminalOutput, { lines });
+    }
+
+    function SectionExperience() {
+      const roles = [
+        {
+          title: 'Principal Software Engineer (Founding Team)',
+          company: 'Scaler AI Labs',
+          period: 'Oct 2025 – Present',
+          color: DRACULA.pink,
+          highlights: [
+            '▸ Leading platform for high-fidelity RL environments — long-horizon contextualized tasks, programmatic & LLM-based graders',
+            '▸ Built DevEx platform: ~60-70% reduction in kickstarting new RL environments while maintaining quality standards',
+            '▸ Scaled sandbox infrastructure to >50K concurrent with >99.9% uptime for partner frontier AI labs',
+            '▸ Extended RL platform to multi-app environments (PM/Support/Assistant persona training)',
+            '▸ Scalable benchmarking system: ~2M tasks/week baselined against SOTA models',
+            '▸ Built crowd-sourced platform for pre/post-training data: Browser/Computer Use, Image Editing, Audio',
+            '▸ Architected petabyte-scale enterprise data pipeline with PII/BII anonymization for RL environments',
+            '▸ Coding RL environments via TerminalBench & Harbor — tasks for SWEBench Verified/Pro',
+            '▸ Leading Meta-Pytorch-HuggingFace OpenEnv Hackathon for open-source verifiable RL environments',
+          ],
+        },
+        {
+          title: 'Engineering Leader',
+          company: 'Eightfold.ai',
+          period: 'Apr 2025 – Oct 2025',
+          color: DRACULA.purple,
+          highlights: [
+            '▸ Led Talent Management product & Agentic transformation leveraging AI for onboarding, career navigator',
+            '▸ Spearheaded MCP platform — launched in Salesforce Agentforce marketplace',
+            '▸ Enhanced workflows with AI Digital Twins (viven.ai) — presented at Cultivate 2025',
+            '▸ Managed go-live for Salesforce, Schneider, Nvidia, Microsoft, DTAG',
+          ],
+        },
+        {
+          title: 'Director of Engineering & Principal SWE',
+          company: 'Scaler & InterviewBit',
+          period: 'Jan 2024 – Mar 2025',
+          color: DRACULA.cyan,
+          highlights: [
+            '▸ Led Tech & Product for DevOps, School of Technology & Business — 1200+ active learners enrolled',
+            '▸ Optimized containerized sessions: 80% cost reduction (Maxwell Online Judge)',
+            '▸ AI call transcript analysis: eliminated negative reviews, -44% research time',
+            '▸ AI sales simulator: +20% conversation quality from real customer conversations',
+            '▸ Browser extension for WhatsApp/CRM/Meet: +74% WA send percentage',
+            '▸ Reduced AWS costs ~35% monthly, transcription costs by 95%',
+          ],
+        },
+        {
+          title: 'Sr. Engineering Manager & Sr. Staff SWE',
+          company: 'Scaler & InterviewBit',
+          period: "Jul'22 – Dec'23",
+          color: DRACULA.green,
+          highlights: [
+            '▸ DX platform research → +40% frontend development productivity across 15 engineers',
+            '▸ AI Sales Copilot: full AWS sponsorship secured',
+            '▸ Page Speed optimization: scores >85, +30% V2Ls, reduced CPLs',
+            '▸ CodeAgon contest support: 60K concurrent participants',
+            '▸ Reduced TA costs 60-65% using AI; AWS infra -40% in 6 months',
+          ],
+        },
+        {
+          title: 'Engineering Manager & Staff SWE',
+          company: 'Scaler & InterviewBit',
+          period: 'Jan 2021 – Jun 2022',
+          color: DRACULA.yellow,
+          highlights: [
+            '▸ Boosted payments to ~2K/month → 4-5x paid user growth',
+            '▸ Scaler Mobile App BFF: P95 API response <100ms',
+            '▸ CodeAgon 2021: 75K concurrent, 125K registrations',
+            '▸ CI/CD pipeline optimization: 40-50% reduction in release cycle time',
+          ],
+        },
+        {
+          title: 'Tech Lead & Product Owner → SWE',
+          company: 'Scaler & InterviewBit',
+          period: 'Jun 2017 – Dec 2020',
+          color: DRACULA.orange,
+          highlights: [
+            '▸ Built Assessments Platform from scratch: scaled to 150K burst concurrent users',
+            '▸ Live chat/video help + gamified TA ecosystem: 1M+ doubts resolved, 4.6/5 rating',
+            '▸ Scaled customer base to 100-125 paying customers, 100K+ tests/month',
+            '▸ Primary SRE for 90% of incidents across the org',
+          ],
+        },
+        {
+          title: 'Software Engineering Intern',
+          company: 'InterviewBit',
+          period: 'Jan 2017 – Jun 2017',
+          color: DRACULA.comment,
+          highlights: [
+            '▸ Built Coding Problem Framework: 10x faster question creation → 45K questions',
+            '▸ Built v0 Assessments Platform — first customers: OYO, Arcesium, Directi, Rubrik, MindTickle',
+          ],
+        },
+      ];
+
+      return React.createElement('div', null,
+        React.createElement('div', { style: { color: DRACULA.green, marginBottom: '4px' } },
+          'sai@portfolio:~$ ', React.createElement('span', { style: { color: DRACULA.fg } }, 'cat experience.log')
+        ),
+        React.createElement('div', { style: { margin: '8px 0 4px', color: DRACULA.pink, fontSize: '18px', fontWeight: 'bold' } },
+          '═══ CAREER TIMELINE ═══'
+        ),
+        React.createElement('div', { style: { color: DRACULA.comment, marginBottom: '12px', fontSize: '14px' } },
+          '// Scroll to explore the full journey'
+        ),
+        roles.map((role, i) =>
+          React.createElement('div', {
+            key: i,
+            className: 'role-block',
+            style: {
+              marginBottom: '16px', padding: '10px 12px',
+              borderLeft: `2px solid ${role.color}`,
+              background: 'rgba(68,71,90,0.2)',
+              transition: 'background 0.2s',
+            },
+            onMouseEnter: e => e.currentTarget.style.background = 'rgba(68,71,90,0.4)',
+            onMouseLeave: e => e.currentTarget.style.background = 'rgba(68,71,90,0.2)',
+          },
+            React.createElement('div', { style: { color: role.color, fontWeight: 'bold', fontSize: '15px' } }, role.title),
+            React.createElement('div', { style: { color: DRACULA.fg, fontSize: '14px', margin: '2px 0' } },
+              role.company, '  ',
+              React.createElement('span', { style: { color: DRACULA.comment } }, role.period)
+            ),
+            React.createElement('div', { style: { marginTop: '6px' } },
+              role.highlights.map((h, j) =>
+                React.createElement('div', {
+                  key: j,
+                  style: { color: DRACULA.fg, fontSize: '14px', lineHeight: '1.65', opacity: 0.9, margin: '2px 0' }
+                }, h)
+              )
+            )
+          )
+        )
+      );
+    }
+
+    function SectionSkills() {
+      const categories = [
+        {
+          name: 'LANGUAGES & FRAMEWORKS',
+          icon: '⚙',
+          skills: [
+            { name: 'Python (FastAPI, Asyncio)', level: 95 },
+            { name: 'Ruby', level: 90 },
+            { name: 'JavaScript / TypeScript', level: 92 },
+            { name: 'Go', level: 75 },
+            { name: 'React / Next.js', level: 90 },
+            { name: 'Node.js', level: 88 },
+          ]
+        },
+        {
+          name: 'AI & ML ENGINEERING',
+          icon: '🧠',
+          skills: [
+            { name: 'Post-Training (SFT/RL) & Post-Training', level: 95 },
+            { name: 'LLM APIs (OpenAI, Claude, Groq)', level: 92 },
+            { name: 'MCP / A2A / Agents', level: 90 },
+            { name: 'Fine-tuning (Unsloth, trl, verl)', level: 82 },
+            { name: 'RAG / LangChain / LangGraph', level: 85 },
+            { name: 'PyTorch / vLLM', level: 78 },
+          ]
+        },
+        {
+          name: 'CLOUD & INFRASTRUCTURE',
+          icon: '☁',
+          skills: [
+            { name: 'AWS (EC2, ECS, Lambda, S3...)', level: 95 },
+            { name: 'GCP', level: 75 },
+            { name: 'Terraform / CloudFormation', level: 88 },
+            { name: 'Docker / Kubernetes', level: 90 },
+            { name: 'CI/CD (Jenkins, GitHub Actions)', level: 92 },
+            { name: 'Observability & Incident Mgmt', level: 88 },
+          ]
+        },
+        {
+          name: 'LEADERSHIP & PRODUCT',
+          icon: '◆',
+          skills: [
+            { name: 'Team Management (up to 30)', level: 95 },
+            { name: 'Product Strategy & OKRs', level: 90 },
+            { name: 'Cost Optimization', level: 95 },
+            { name: 'Stakeholder Management', level: 88 },
+            { name: 'Technical Vision & Architecture', level: 92 },
+            { name: 'Developer Productivity / DX', level: 90 },
+          ]
+        },
+        {
+          name: 'DATABASES & DATA',
+          icon: '⬡',
+          skills: [
+            { name: 'PostgreSQL / MySQL', level: 92 },
+            { name: 'Redis / Valkey', level: 90 },
+            { name: 'MongoDB / DynamoDB', level: 85 },
+            { name: 'Redshift / Athena', level: 78 },
+          ]
+        },
+      ];
+
+      return React.createElement('div', null,
+        React.createElement('div', { style: { color: DRACULA.green, marginBottom: '4px' } },
+          'sai@portfolio:~$ ', React.createElement('span', { style: { color: DRACULA.fg } }, 'htop --skills')
+        ),
+        React.createElement('div', { style: { margin: '8px 0 12px', color: DRACULA.pink, fontSize: '18px', fontWeight: 'bold' } },
+          '═══ SKILL PROFICIENCY MONITOR ═══'
+        ),
+        categories.map((cat, ci) =>
+          React.createElement('div', { key: ci, style: { marginBottom: '14px' } },
+            React.createElement('div', { style: { color: DRACULA.cyan, fontSize: '14px', fontWeight: 'bold', marginBottom: '4px' } },
+              `${cat.icon} ${cat.name}`
+            ),
+            cat.skills.map((skill, si) =>
+              React.createElement(SkillBar, { key: si, name: skill.name, level: skill.level, index: ci * 6 + si })
+            )
+          )
+        )
+      );
+    }
+
+    function SkillBar({ name, level, index }) {
+      const [animated, setAnimated] = React.useState(0);
+      React.useEffect(() => {
+        const t = setTimeout(() => setAnimated(level), 100 + index * 60);
+        return () => clearTimeout(t);
+      }, [level, index]);
+
+      const barWidth = 24;
+      const filled = Math.round((animated / 100) * barWidth);
+      const empty = barWidth - filled;
+      const color = level >= 90 ? DRACULA.green : level >= 80 ? DRACULA.cyan : DRACULA.yellow;
+
+      return React.createElement('div', {
+        style: { display: 'flex', alignItems: 'center', fontSize: '14px', lineHeight: '1.8', gap: '8px' }
+      },
+        React.createElement('span', { style: { color: DRACULA.fg, minWidth: '250px', opacity: 0.9 } }, name),
+        React.createElement('span', { style: { color } }, '[' + '█'.repeat(filled) + '░'.repeat(empty) + ']'),
+        React.createElement('span', { style: { color: DRACULA.comment, minWidth: '32px', textAlign: 'right' } }, `${animated}%`)
+      );
+    }
+
+    function SectionEducation() {
+      const lines = [
+        { prompt: true, cmd: 'cat education.md' },
+        { text: '' },
+        { text: '╔══════════════════════════════════════════════════════╗', color: DRACULA.purple },
+        { text: '║                                                      ║', color: DRACULA.purple },
+        { text: '║   🎓  BITS Pilani, Goa Campus                       ║', color: DRACULA.purple },
+        { text: '║                                                      ║', color: DRACULA.purple },
+        { text: '║   B.E. (Hons.) – Computer Science                   ║', color: DRACULA.cyan },
+        { text: '║   Aug 2013 – Dec 2016                                ║', color: DRACULA.comment },
+        { text: '║                                                      ║', color: DRACULA.purple },
+        { text: '║   One of India\'s premier engineering institutions.   ║', color: DRACULA.fg },
+        { text: '║   Where the geekery began.                           ║', color: DRACULA.green },
+        { text: '║                                                      ║', color: DRACULA.purple },
+        { text: '╚══════════════════════════════════════════════════════╝', color: DRACULA.purple },
+      ];
+
+      return React.createElement(TerminalOutput, { lines });
+    }
+
+    function SectionContact() {
+      const links = [
+        { icon: '🔗', label: 'LinkedIn', url: 'https://www.linkedin.com/in/cyb3rh4wk', color: DRACULA.cyan },
+        { icon: '🐙', label: 'GitHub', url: 'https://github.com/cyb3rh4wk', color: DRACULA.green },
+        { icon: '𝕏 ', label: 'X (Twitter)', url: 'https://x.com/cyb3rh4wk', color: DRACULA.fg },
+        { icon: '✉ ', label: 'Email', url: 'mailto:krishnaatbits@gmail.com', color: DRACULA.orange },
+        { icon: '📱', label: 'Phone', url: 'tel:+918378988125', color: DRACULA.yellow },
+      ];
+
+      return React.createElement('div', null,
+        React.createElement('div', { style: { color: DRACULA.green, marginBottom: '4px' } },
+          'sai@portfolio:~$ ', React.createElement('span', { style: { color: DRACULA.fg } }, 'cat .contact')
+        ),
+        React.createElement('div', { style: { margin: '12px 0', color: DRACULA.pink, fontSize: '18px', fontWeight: 'bold' } },
+          '═══ REACH OUT ═══'
+        ),
+        React.createElement('div', { style: { margin: '16px 0' } },
+          links.map((link, i) =>
+            React.createElement('a', {
+              key: i, href: link.url, target: '_blank', rel: 'noopener',
+              style: {
+                display: 'block', color: link.color, textDecoration: 'none',
+                padding: '8px 12px', margin: '4px 0', fontSize: '15px',
+                border: `1px solid ${DRACULA.currentLine}`,
+                background: 'rgba(68,71,90,0.15)',
+                transition: 'all 0.2s',
+              },
+              onMouseEnter: e => { e.currentTarget.style.background = 'rgba(68,71,90,0.4)'; e.currentTarget.style.borderColor = link.color; },
+              onMouseLeave: e => { e.currentTarget.style.background = 'rgba(68,71,90,0.15)'; e.currentTarget.style.borderColor = DRACULA.currentLine; },
+            },
+              `${link.icon}  ${link.label}  →  ${link.url.replace('mailto:', '').replace('tel:', '')}`
+            )
+          )
+        ),
+        React.createElement('div', { style: { color: DRACULA.comment, fontSize: '14px', marginTop: '16px' } },
+          '// Feel free to reach out for collaborations, opportunities,',
+          React.createElement('br'),
+          '// or just to geek out about RL environments and world models.'
+        )
+      );
+    }
+
+    function SectionBlog() {
+      return React.createElement('div', null,
+        React.createElement('div', { style: { color: DRACULA.green, marginBottom: '4px' } },
+          'sai@portfolio:~$ ', React.createElement('span', { style: { color: DRACULA.fg } }, 'ls blog/')
+        ),
+        React.createElement('div', { style: { margin: '12px 0', color: DRACULA.pink, fontSize: '18px', fontWeight: 'bold' } },
+          '═══ WRITING & THOUGHTS ═══'
+        ),
+        React.createElement('div', { style: { color: DRACULA.yellow, fontSize: '15px', margin: '16px 0', padding: '12px', border: `1px dashed ${DRACULA.comment}` } },
+          '⚡ Coming soon...',
+          React.createElement('br'),
+          React.createElement('br'),
+          React.createElement('span', { style: { color: DRACULA.comment } },
+            'Topics in the pipeline:'
+          ),
+          React.createElement('div', { style: { color: DRACULA.fg, marginTop: '8px', lineHeight: '1.8' } },
+            '  → Building Post-Training (SFT/RL) at Scale for Frontier AI Labs',
+            React.createElement('br'),
+            '  → From Intern to Director: Lessons from 8 Years in Startups',
+            React.createElement('br'),
+            '  → World Models: Why They Matter for ASI',
+            React.createElement('br'),
+            '  → Cost Optimization War Stories (95% Reduction & More)',
+            React.createElement('br'),
+            '  → The Art of Running 50K Concurrent Sandboxes',
+          )
+        )
+      );
+    }
+
+    function SectionProjects() {
+      const projects = [
+        {
+          name: 'OpenEnv Hackathon',
+          desc: 'Leading Meta-PyTorch-HuggingFace hackathon to build open-source verifiable RL environments with GRPO-based post-training yields on small models.',
+          tags: ['PyTorch', 'RL', 'HuggingFace', 'Open Source'],
+          period: '2026',
+          status: 'IN PROGRESS',
+          color: DRACULA.yellow,
+        },
+        {
+          name: 'RL Environment Platform',
+          desc: 'High-fidelity reinforcement learning environments with long-horizon contextualized tasks, multi-app support, and 2M tasks/week benchmarking for frontier AI labs.',
+          tags: ['Python', 'Ray', 'AWS', 'Docker'],
+          period: '2025–Present',
+          status: 'ACTIVE',
+          color: DRACULA.green,
+        },
+        {
+          name: 'Enterprise Data Anonymization Pipeline',
+          desc: 'Cloud & self-hosted platform processing petabytes of enterprise data with PII/BII anonymization for RL environment preparation. On-premise deployment support.',
+          tags: ['Python', 'AWS', 'Terraform', 'Security'],
+          period: '2025–Present',
+          status: 'ACTIVE',
+          color: DRACULA.green,
+        },
+        {
+          name: 'Coding RL via TerminalBench & Harbor',
+          desc: 'Pipelines generating programmatically verifiable post-training tasks from open-source & enterprise repos. Targeting SWEBench Verified, SWEBench Pro, and TerminalBench.',
+          tags: ['Python', 'RL', 'Git', 'LLM'],
+          period: '2025–Present',
+          status: 'ACTIVE',
+          color: DRACULA.green,
+        },
+        {
+          name: 'Audio Pre-Training Data Platform',
+          desc: 'High sample rate & bit-depth audio pipeline with 100% speaker diarization, per-utterance emotion/style annotations, phoneme-aligned and word-level transcripts.',
+          tags: ['Python', 'Audio', 'ML', 'Annotation'],
+          period: '2025',
+          status: 'SHIPPED',
+          color: DRACULA.cyan,
+        },
+        {
+          name: 'Computer Use Pre-Training Data Tooling',
+          desc: 'Low-latency (<100ms) data collection across Windows/macOS/Linux with crowd-sourced annotator platform for Browser/Computer Use, Image Editing, and Audio Assistants.',
+          tags: ['Python', 'Cross-Platform', 'Crowd-Source'],
+          period: '2025',
+          status: 'SHIPPED',
+          color: DRACULA.cyan,
+        },
+        {
+          name: 'MCP Platform @ Eightfold',
+          desc: 'Model Context Protocol platform launched in Salesforce Agentforce marketplace. Powered in-product AI agents for Talent Management.',
+          tags: ['MCP', 'Agents', 'Salesforce'],
+          period: '2025',
+          status: 'SHIPPED',
+          color: DRACULA.cyan,
+        },
+        {
+          name: 'AI Digital Twins — Talent Management',
+          desc: 'Enhanced Talent Management workflows using AI Digital Twins in collaboration with viven.ai. Presented at Eightfold Cultivate 2025.',
+          tags: ['AI', 'Digital Twins', 'Product'],
+          period: '2025',
+          status: 'SHIPPED',
+          color: DRACULA.cyan,
+        },
+        {
+          name: 'Maxwell Online Judge',
+          desc: 'Containerized coding sessions for Backend, Fullstack, DevOps & Cloud. 80% cost reduction with optimized container orchestration.',
+          tags: ['Docker', 'K8s', 'Node.js', 'AWS'],
+          period: '2024',
+          status: 'SHIPPED',
+          color: DRACULA.cyan,
+        },
+        {
+          name: 'AI Sales Copilot & Simulator',
+          desc: 'AI-powered sales training using real customer conversations. +20% conversation quality, retraining loops. Full AWS sponsorship secured.',
+          tags: ['LLM', 'Python', 'React', 'AWS'],
+          period: '2023–2024',
+          status: 'SHIPPED',
+          color: DRACULA.cyan,
+        },
+        {
+          name: 'Call Audits & Analysis (Sail Quest)',
+          desc: 'AI transcript analysis eliminating negative social media reviews, -44% research time. Real-time customer intelligence improving marketing efficiency 10-20%.',
+          tags: ['LLM', 'Python', 'Analytics'],
+          period: '2024',
+          status: 'SHIPPED',
+          color: DRACULA.cyan,
+        },
+        {
+          name: 'WhatsApp/CRM Browser Extension',
+          desc: 'Browser extension integrated with WhatsApp, CRM, Google Meet/Zoom/Teams. Increased WhatsApp send percentage by 74%.',
+          tags: ['JavaScript', 'Chrome Extension', 'CRM'],
+          period: '2024',
+          status: 'SHIPPED',
+          color: DRACULA.cyan,
+        },
+        {
+          name: 'DX Platform & Page Speed Initiative',
+          desc: 'Developer Experience platform from research & surveys → +40% frontend productivity. Page Speed scores >85, +30% V2Ls.',
+          tags: ['React', 'Performance', 'DX'],
+          period: '2022–2023',
+          status: 'SHIPPED',
+          color: DRACULA.cyan,
+        },
+        {
+          name: 'CodeAgon Contest Platform',
+          desc: 'Scaled to handle 75K concurrent participants with 125K registrations. Mentored team across multiple annual editions.',
+          tags: ['Node.js', 'Redis', 'AWS', 'Scale'],
+          period: '2021–2023',
+          status: 'SHIPPED',
+          color: DRACULA.cyan,
+        },
+        {
+          name: 'Scaler Mobile App (BFF)',
+          desc: 'Backend-for-Frontend architecture delivering P95 API response times below 100ms for the Scaler mobile experience.',
+          tags: ['Node.js', 'BFF', 'Mobile'],
+          period: '2021',
+          status: 'SHIPPED',
+          color: DRACULA.cyan,
+        },
+        {
+          name: 'Assessments Platform',
+          desc: 'Built from scratch with automatic evaluation engines. Scaled to 150K burst concurrent users, 100K+ tests/month across contests and hiring.',
+          tags: ['Ruby', 'Node.js', 'Docker', 'AWS'],
+          period: '2017–2020',
+          status: 'SHIPPED',
+          color: DRACULA.cyan,
+        },
+        {
+          name: 'Teaching Assistants Platform',
+          desc: 'Live chat/video help, gamification of TA ecosystem, quality moderation. 200+ TAs resolving 1.5K+ doubts daily, 1M+ total, 4.6/5 rating.',
+          tags: ['Ruby', 'React', 'WebSocket'],
+          period: '2019–2020',
+          status: 'SHIPPED',
+          color: DRACULA.cyan,
+        },
+        {
+          name: 'Coding Problem Creation Framework',
+          desc: 'Reduced question creation time on InterviewBit by 10x, enabling 45K questions. Built during internship — first major impact.',
+          tags: ['Ruby', 'Tooling'],
+          period: '2017',
+          status: 'LEGACY',
+          color: DRACULA.comment,
+        },
+      ];
+
+      return React.createElement('div', null,
+        React.createElement('div', { style: { color: DRACULA.green, marginBottom: '4px' } },
+          'sai@portfolio:~$ ', React.createElement('span', { style: { color: DRACULA.fg } }, 'ls -la projects/')
+        ),
+        React.createElement('div', { style: { margin: '8px 0 12px', color: DRACULA.pink, fontSize: '18px', fontWeight: 'bold' } },
+          '═══ KEY PROJECTS ═══'
+        ),
+        projects.map((proj, i) =>
+          React.createElement('div', {
+            key: i,
+            style: {
+              margin: '8px 0', padding: '10px 12px',
+              border: `1px solid ${DRACULA.currentLine}`,
+              background: 'rgba(68,71,90,0.15)',
+              transition: 'all 0.2s',
+            },
+            onMouseEnter: e => { e.currentTarget.style.borderColor = proj.color; e.currentTarget.style.background = 'rgba(68,71,90,0.3)'; },
+            onMouseLeave: e => { e.currentTarget.style.borderColor = DRACULA.currentLine; e.currentTarget.style.background = 'rgba(68,71,90,0.15)'; },
+          },
+            React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
+              React.createElement('span', { style: { color: DRACULA.cyan, fontWeight: 'bold', fontSize: '15px' } }, proj.name),
+              React.createElement('span', { style: { color: DRACULA.comment, fontSize: '12px', marginLeft: '8px', marginRight: 'auto' } }, proj.period),
+              React.createElement('span', {
+                style: {
+                  color: proj.color, fontSize: '12px', padding: '2px 6px',
+                  border: `1px solid ${proj.color}`, fontWeight: 'bold',
                 }
+              }, proj.status)
+            ),
+            React.createElement('div', { style: { color: DRACULA.fg, fontSize: '14px', margin: '6px 0', opacity: 0.85, lineHeight: '1.5' } }, proj.desc),
+            React.createElement('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap' } },
+              proj.tags.map((tag, j) =>
+                React.createElement('span', {
+                  key: j,
+                  style: { color: DRACULA.purple, fontSize: '12px', padding: '1px 6px', background: 'rgba(189,147,249,0.1)', border: `1px solid rgba(189,147,249,0.3)` }
+                }, tag)
+              )
+            )
+          )
+        )
+      );
+    }
+
+    function TerminalOutput({ lines }) {
+      return React.createElement('div', null,
+        lines.map((line, i) => {
+          if (line.prompt) {
+            return React.createElement('div', { key: i, style: { color: DRACULA.green, marginBottom: '4px' } },
+              'sai@portfolio:~$ ', React.createElement('span', { style: { color: DRACULA.fg } }, line.cmd)
+            );
+          }
+          return React.createElement('div', {
+            key: i,
+            style: { color: line.color || DRACULA.fg, fontSize: line.heading ? '20px' : '15px', fontWeight: line.heading ? 'bold' : 'normal', lineHeight: '1.65', whiteSpace: 'pre-wrap' }
+          }, line.text || '\u00A0');
+        })
+      );
+    }
+
+    // =========================================================================
+    // terminal.jsx — tmux-style layout, command input, status bar, matrix FX
+    // =========================================================================
+    const SECTIONS = [
+      { id: 'about', label: 'about.md', icon: '❯', component: 'SectionAbout' },
+      { id: 'experience', label: 'experience.log', icon: '◈', component: 'SectionExperience' },
+      { id: 'skills', label: 'skills.htop', icon: '▣', component: 'SectionSkills' },
+      { id: 'projects', label: 'projects/', icon: '⬢', component: 'SectionProjects' },
+      { id: 'education', label: 'education.md', icon: '△', component: 'SectionEducation' },
+      { id: 'blog', label: 'blog/', icon: '✦', component: 'SectionBlog' },
+      { id: 'contact', label: '.contact', icon: '◉', component: 'SectionContact' },
+    ];
+
+    const SECTION_COMPONENTS = {
+      SectionAbout, SectionExperience, SectionSkills, SectionProjects,
+      SectionEducation, SectionBlog, SectionContact,
+    };
+
+    const COMMAND_MAP = {
+      'help': 'help',
+      'whoami': 'about', 'about': 'about', 'cat about.md': 'about',
+      'experience': 'experience', 'exp': 'experience', 'cat experience.log': 'experience', 'work': 'experience',
+      'skills': 'skills', 'htop': 'skills', 'htop --skills': 'skills',
+      'projects': 'projects', 'ls projects/': 'projects', 'ls -la projects/': 'projects',
+      'education': 'education', 'edu': 'education', 'cat education.md': 'education',
+      'blog': 'blog', 'ls blog/': 'blog',
+      'contact': 'contact', 'cat .contact': 'contact',
+      'clear': 'clear',
+      'systemctl': 'systemctl', 'systemctl status': 'systemctl',
+      'sudo rm -rf /': 'sudorm',
+      'exit': 'exit',
+      'ls': 'ls',
+      'pwd': 'pwd',
+      'uptime': 'uptime',
+      'fortune': 'fortune',
+      'cowsay': 'cowsay',
+      'matrix': 'matrix',
+    };
+
+    const FORTUNES = [
+      '"Any sufficiently advanced technology is indistinguishable from magic." — Arthur C. Clarke',
+      '"First, solve the problem. Then, write the code." — John Johnson',
+      '"The best way to predict the future is to invent it." — Alan Kay',
+      '"Talk is cheap. Show me the code." — Linus Torvalds',
+      '"It works on my machine." — Every developer ever',
+      '"There are only two hard things: cache invalidation and naming things." — Phil Karlton',
+    ];
+
+    function Terminal() {
+      const [activeSection, setActiveSection] = React.useState('about');
+      const [commandHistory, setCommandHistory] = React.useState([]);
+      const [historyIndex, setHistoryIndex] = React.useState(-1);
+      const [inputValue, setInputValue] = React.useState('');
+      const [showNeofetch, setShowNeofetch] = React.useState(false);
+      const [showMatrix, setShowMatrix] = React.useState(false);
+      const [statusMsg, setStatusMsg] = React.useState('');
+      const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
+      const contentRef = React.useRef(null);
+      const inputRef = React.useRef(null);
+
+      const focusInput = () => { if (inputRef.current) inputRef.current.focus(); };
+
+      const [winWidth, setWinWidth] = React.useState(window.innerWidth);
+      React.useEffect(() => {
+        const onResize = () => setWinWidth(window.innerWidth);
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+      }, []);
+
+      React.useEffect(() => {
+        if (contentRef.current) contentRef.current.scrollTop = 0;
+      }, [activeSection]);
+
+      const executeCommand = (cmd) => {
+        const trimmed = cmd.trim().toLowerCase();
+        if (!trimmed) return;
+        setCommandHistory(prev => [...prev, trimmed]);
+        setHistoryIndex(-1);
+
+        const mapped = COMMAND_MAP[trimmed];
+        if (mapped === 'help') {
+          setStatusMsg('Available: whoami, experience, skills, projects, education, blog, contact, systemctl, fortune, cowsay, matrix, ls, pwd, uptime, clear, exit');
+          return;
+        }
+        if (mapped === 'clear') { setStatusMsg(''); return; }
+        if (mapped === 'systemctl') { setShowNeofetch(true); setActiveSection('neofetch'); return; }
+        if (mapped === 'sudorm') { setStatusMsg('Nice try 😏 — Permission denied. This portfolio is immortal.'); return; }
+        if (mapped === 'exit') { setStatusMsg('exit? Where would you even go? Stay a while...'); return; }
+        if (mapped === 'ls') { setStatusMsg('about.md  experience.log  skills.htop  projects/  education.md  blog/  .contact  .easter_eggs/'); return; }
+        if (mapped === 'pwd') { setStatusMsg('/home/sai/portfolio'); return; }
+        if (mapped === 'uptime') {
+          const years = new Date().getFullYear() - 2017;
+          setStatusMsg(`up ${years} years, load average: principal_swe, ai_research, rl_environments`);
+          return;
+        }
+        if (mapped === 'fortune') { setStatusMsg(FORTUNES[Math.floor(Math.random() * FORTUNES.length)]); return; }
+        if (mapped === 'cowsay') {
+          setStatusMsg(' _______________\n< Hire Sai! >\n ---------------\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\\n                ||----w |\n                ||     ||');
+          return;
+        }
+        if (mapped === 'matrix') { setShowMatrix(true); setTimeout(() => setShowMatrix(false), 5000); return; }
+        if (mapped && SECTIONS.find(s => s.id === mapped)) {
+          setActiveSection(mapped);
+          setShowNeofetch(false);
+          setStatusMsg('');
+          return;
+        }
+        setStatusMsg(`command not found: ${trimmed}. Type 'help' for available commands.`);
+      };
+
+      const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+          executeCommand(inputValue);
+          setInputValue('');
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (commandHistory.length > 0) {
+            const newIndex = historyIndex === -1 ? commandHistory.length - 1 : Math.max(0, historyIndex - 1);
+            setHistoryIndex(newIndex);
+            setInputValue(commandHistory[newIndex]);
+          }
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (historyIndex === -1) return;
+          const newIndex = historyIndex + 1;
+          if (newIndex >= commandHistory.length) { setHistoryIndex(-1); setInputValue(''); }
+          else { setHistoryIndex(newIndex); setInputValue(commandHistory[newIndex]); }
+        } else if (e.key === 'Tab') {
+          e.preventDefault();
+          const matches = Object.keys(COMMAND_MAP).filter(c => c.startsWith(inputValue.toLowerCase()));
+          if (matches.length === 1) setInputValue(matches[0]);
+          else if (matches.length > 1) setStatusMsg('Matches: ' + matches.join(', '));
+        }
+      };
+
+      const SystemctlDisplay = () => {
+        const [uptime] = React.useState(() => {
+          const start = new Date(2017, 0, 1);
+          const now = new Date();
+          const years = now.getFullYear() - start.getFullYear();
+          const days = Math.floor((now - new Date(now.getFullYear(), 0, 1)) / 86400000);
+          return `${years}y ${days}d`;
+        });
+
+        const services = [
+          { name: 'platform-engineering.service', status: 'active (running)', since: 'Oct 2025', color: DRACULA.green, desc: 'Post-Training (SFT/RL) & DevEx Platform' },
+          { name: 'ai-research.service', status: 'active (running)', since: '2025', color: DRACULA.green, desc: 'World Models & Multi-Modal Architecture' },
+          { name: 'leadership.service', status: 'active (running)', since: '2021', color: DRACULA.green, desc: 'Engineering Teams (up to 30 engineers)' },
+          { name: 'cost-optimizer.daemon', status: 'active (running)', since: '2023', color: DRACULA.green, desc: 'AWS -35%, Transcription -95%' },
+          { name: 'mentorship.service', status: 'active (running)', since: '2020', color: DRACULA.green, desc: 'Hackathons, Intern Programs, Career Growth' },
+          { name: 'frontend-dx.service', status: 'idle', since: '2023', color: DRACULA.yellow, desc: '+40% Productivity (maintenance mode)' },
+        ];
+
+        return React.createElement('div', null,
+          React.createElement('div', { style: { color: DRACULA.green, marginBottom: '8px' } },
+            'sai@portfolio:~$ ', React.createElement('span', { style: { color: DRACULA.fg } }, 'systemctl status sai-movva')
+          ),
+          React.createElement('div', { style: { margin: '8px 0', padding: '12px', background: DRACULA.bgDarker, border: `1px solid ${DRACULA.currentLine}` } },
+            React.createElement('div', { style: { color: DRACULA.green, fontSize: '16px', fontWeight: 'bold' } }, '● sai-movva.service — Principal Software Engineer'),
+            React.createElement('div', { style: { fontSize: '14px', lineHeight: '1.8', marginTop: '6px' } },
+              React.createElement('span', { style: { color: DRACULA.comment } }, '     Loaded: '),
+              React.createElement('span', { style: { color: DRACULA.fg } }, 'loaded (/etc/bits-pilani/cs-hons; enabled)'),
+              React.createElement('br'),
+              React.createElement('span', { style: { color: DRACULA.comment } }, '     Active: '),
+              React.createElement('span', { style: { color: DRACULA.green, fontWeight: 'bold' } }, 'active (running) '),
+              React.createElement('span', { style: { color: DRACULA.comment } }, `since Jan 2017; ${uptime} ago`),
+              React.createElement('br'),
+              React.createElement('span', { style: { color: DRACULA.comment } }, '    Process: '),
+              React.createElement('span', { style: { color: DRACULA.fg } }, 'Intern → SWE → Tech Lead → EM → Sr.Staff → Director → Principal'),
+              React.createElement('br'),
+              React.createElement('span', { style: { color: DRACULA.comment } }, '   Main PID: '),
+              React.createElement('span', { style: { color: DRACULA.cyan } }, '1337 (scaler-ai-labs)'),
+              React.createElement('br'),
+              React.createElement('span', { style: { color: DRACULA.comment } }, '      Tasks: '),
+              React.createElement('span', { style: { color: DRACULA.fg } }, '6 active services, 0 failed'),
+              React.createElement('br'),
+              React.createElement('span', { style: { color: DRACULA.comment } }, '     Memory: '),
+              React.createElement('span', { style: { color: DRACULA.fg } }, '8+ years loaded, 0 leaked'),
+              React.createElement('br'),
+              React.createElement('span', { style: { color: DRACULA.comment } }, '        CPU: '),
+              React.createElement('span', { style: { color: DRACULA.orange } }, 'AI/ML ◆ Platform ◆ Leadership ◆ Product @ max-clock'),
+            ),
+          ),
+          React.createElement('div', { style: { margin: '16px 0 8px', color: DRACULA.pink, fontSize: '18px', fontWeight: 'bold' } }, '═══ ACTIVE SERVICES ═══'),
+          services.map((svc, i) =>
+            React.createElement('div', {
+              key: i,
+              style: {
+                margin: '6px 0', padding: '8px 12px', fontSize: '14px', lineHeight: '1.6',
+                borderLeft: `2px solid ${svc.color}`, background: 'rgba(68,71,90,0.15)',
+              },
+            },
+              React.createElement('div', null,
+                React.createElement('span', { style: { color: svc.color, fontWeight: 'bold' } }, '● '),
+                React.createElement('span', { style: { color: DRACULA.cyan } }, svc.name),
+                React.createElement('span', { style: { color: DRACULA.comment, marginLeft: '8px' } }, `— ${svc.status} since ${svc.since}`),
+              ),
+              React.createElement('div', { style: { color: DRACULA.fg, opacity: 0.85, marginLeft: '16px' } }, svc.desc),
+            )
+          ),
+          React.createElement('div', { style: { marginTop: '16px', display: 'flex', gap: '4px' } },
+            [DRACULA.red, DRACULA.green, DRACULA.yellow, DRACULA.cyan, DRACULA.pink, DRACULA.purple, DRACULA.orange, DRACULA.fg].map((c, i) =>
+              React.createElement('span', { key: i, style: { display: 'inline-block', width: '24px', height: '8px', background: c, borderRadius: '1px' } })
+            )
+          )
+        );
+      };
+
+      const renderContent = () => {
+        if (activeSection === 'neofetch') return React.createElement(SystemctlDisplay);
+        const section = SECTIONS.find(s => s.id === activeSection);
+        if (!section) return null;
+        const Component = SECTION_COMPONENTS[section.component];
+        return Component ? React.createElement(Component) : null;
+      };
+
+      const sidebarWidth = sidebarCollapsed ? '40px' : (winWidth > 1600 ? '320px' : winWidth > 1200 ? '280px' : '240px');
+
+      const termStyles = {
+        wrapper: {
+          display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw',
+          background: 'rgba(40, 42, 54, 0.7)', fontFamily: "'Fira Code', monospace", color: DRACULA.fg,
+          overflow: 'hidden',
+        },
+        topBar: {
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '4px 12px', background: 'rgba(33, 34, 44, 0.92)', borderBottom: `1px solid ${DRACULA.currentLine}`,
+          fontSize: '14px', flexShrink: 0, minHeight: '28px',
+        },
+        body: {
+          display: 'flex', flex: 1, overflow: 'hidden',
+        },
+        sidebar: {
+          width: sidebarWidth,
+          borderRight: `1px solid ${DRACULA.currentLine}`,
+          background: 'rgba(33, 34, 44, 0.88)',
+          display: 'flex', flexDirection: 'column',
+          transition: 'width 0.2s ease',
+          flexShrink: 0, overflow: 'hidden',
+        },
+        sidebarHeader: {
+          padding: '10px 12px', borderBottom: `1px solid ${DRACULA.currentLine}`,
+          color: DRACULA.comment, fontSize: '15px', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between',
+          alignItems: 'center', cursor: 'pointer', flexShrink: 0,
+        },
+        navItem: (active) => ({
+          padding: '8px 12px', cursor: 'pointer', fontSize: '16px',
+          display: 'flex', alignItems: 'center', gap: '10px',
+          background: active ? DRACULA.currentLine : 'transparent',
+          color: active ? DRACULA.cyan : DRACULA.fg,
+          borderLeft: active ? `2px solid ${DRACULA.pink}` : '2px solid transparent',
+          transition: 'all 0.15s',
+        }),
+        content: {
+          flex: 1, overflow: 'auto', padding: '16px 20px',
+          background: 'rgba(40, 42, 54, 0.35)',
+        },
+        commandBar: {
+          display: 'flex', alignItems: 'center', padding: '6px 12px',
+          borderTop: `1px solid ${DRACULA.currentLine}`,
+          background: 'rgba(33, 34, 44, 0.92)', flexShrink: 0,
+          fontSize: '15px',
+        },
+        statusBar: {
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '2px 12px', background: DRACULA.purple,
+          color: DRACULA.bg, fontSize: '13px', fontWeight: 'bold', flexShrink: 0,
+        },
+      };
+
+      const MatrixOverlay = () => {
+        const canvasRef = React.useRef(null);
+        React.useEffect(() => {
+          const canvas = canvasRef.current;
+          if (!canvas) return;
+          const ctx = canvas.getContext('2d');
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+          const cols = Math.floor(canvas.width / 14);
+          const drops = Array(cols).fill(1);
+          const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()';
+          const handle = 'cyb3rh4wk';
+          let frame = 0;
+          const draw = () => {
+            frame++;
+            ctx.fillStyle = 'rgba(40, 42, 54, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = DRACULA.green;
+            ctx.font = '14px Fira Code';
+            for (let i = 0; i < drops.length; i++) {
+              const text = chars[Math.floor(Math.random() * chars.length)];
+              ctx.fillText(text, i * 14, drops[i] * 14);
+              if (drops[i] * 14 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+              drops[i]++;
             }
-            @media only screen and (min-width : 800px) and (max-width : 991px){
-                .resp-vtabs .resp-tabs-container {
-                    margin-left: 13px;
-                    width:89%;
-                }
+            if (frame > 45) {
+              const fontSize = Math.min(80, canvas.width / 8);
+              ctx.font = `bold ${fontSize}px Fira Code`;
+              ctx.textAlign = 'center';
+              const alpha = Math.min(1, (frame - 45) / 30);
+              ctx.fillStyle = `rgba(248, 248, 242, ${alpha})`;
+              ctx.shadowColor = DRACULA.purple;
+              ctx.shadowBlur = 8 * alpha;
+              ctx.fillText(handle, canvas.width / 2, canvas.height / 2);
+              ctx.shadowBlur = 0;
+              ctx.textAlign = 'start';
+              if (frame > 65) {
+                const subAlpha = Math.min(1, (frame - 65) / 20);
+                ctx.font = '16px Fira Code';
+                ctx.fillStyle = `rgba(80, 250, 123, ${subAlpha})`;
+                ctx.textAlign = 'center';
+                ctx.fillText('Principal Software Engineer', canvas.width / 2, canvas.height / 2 + fontSize * 0.7);
+                ctx.textAlign = 'start';
+              }
             }
-
-        </style>
-
-    </head>
-
-    <body>
-
-        <!--[if lt IE 7]>
-                <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-
-        <!-- Laoding page -->
-        <div id="preloader"><div id="spinner"></div></div>
-
-        <!-- .slideshow -->
-        <!--<ul class="cb-slideshow" id="cb_slideshow">
-            <li><span>Image 01</span><div></div></li>
-            <li><span>Image 02</span><div></div></li>
-            <li><span>Image 03</span><div></div></li>
-            <li><span>Image 04</span><div></div></li>
-            <li><span>Image 05</span><div></div></li>
-            <li><span>Image 06</span><div></div></li>
-        </ul> -->
-        <!-- /.slideshow -->
-
-        <!-- .wrapper -->
-        <div class="wrapper">
-
-            <!--- .Content -->
-            <section class="tab-content">
-                <div class="container" style="width:90% !important;">
-
-                    <div class="row">
-
-                        <div class="col-md-12">
-
-                            <div class="row">
-
-
-                                <div class="col-md-3 widget-profil">
-                                    <div class="row">
-
-                                        <!-- Profile Image -->
-                                        <div class="col-lg-12 col-md-12 col-sm-3 col-xs-12 ">
-
-                                            <div class="image-holder one" id="pic_prof_1"  style="display:none">
-
-                                                <img class="head-image up circle" src="images/profile.jpg" width="150" height="150" alt="" />
-                                                <img class="head-image up-left circle" src="images/profile.jpg" width="150" height="150" alt="" />
-                                                <img class="head-image left circle" src="images/profile.jpg" width="150" height="150" alt="" />
-                                                <img class="head-image down-left circle" src="images/profile.jpg" width="150" height="150" alt="" />
-                                                <img class="head-image down circle" src="images/profile.jpg" width="150" height="150" alt="" />
-                                                <img class="head-image down-right circle" src="images/profile.jpg" width="150" height="150" alt="" />
-                                                <img class="head-image right circle" src="images/profile.jpg" width="150" height="150" alt="" />
-                                                <img class="head-image up-right circle" src="images/profile.jpg" width="150" height="150" alt="" />
-                                                <img class="head-image front circle" src="images/profile.jpg" width="150" height="150" alt="" />
-
-                                            </div>
-
-                                            <!-- style for simple image profile -->
-                                            <div class="circle-img" id="pic_prof_2"></div>
-
-                                        </div>
-                                        <!-- End Profile Image -->
-
-                                        <div class="col-lg-12 col-md-12 col-sm-9 col-xs-12">
-
-                                            <!-- Profile info -->
-                                            <div id="profile_info">
-                                                <h1 id="name" class="transition-02">Sai Movva</h1>
-                                                <h4 class="line">Software Developer</h4>
-                                                <h6><span class="fa fa-map-marker"></span> Hyderabad, IN</h6>
-                                            </div>
-                                            <!-- End Profile info -->
-
-
-                                            <!-- Profile Description -->
-                                            <div id="profile_desc">
-                                                <p>
-                                                    'Description'
-                                                </p>
-                                                <p>
-                                                    'Technical Interests'
-                                                </p>
-                                            </div>
-                                            <!-- End Profile Description -->
-
-
-                                            <!-- Name -->
-                                            <div id="profile_social">
-                                                <h6>My Social Profiles</h6>
-                                                <a href="https://www.facebook.com/sudoprince"><i class="fa fa-facebook"></i></a>
-                                                <a href="http://www.linkedin.com/in/cyb3rh4wk"><i class="fa fa-linkedin"></i></a>
-                                                <div class="clear"></div>
-                                            </div>
-                                            <!-- End Name -->
-
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                                <div class="col-md-9 flexy_content" style="padding-left: 0;padding-right: 0;">
-
-                                    <!-- verticalTab menu -->
-                                    <div id="verticalTab">
-
-                                        <ul class="resp-tabs-list">
-                                            <li class="tabs-profile hi-icon-wrap hi-icon-effect-5 hi-icon-effect-5a profile" data-tab-name="profile">
-                                                <span class="tite-list">profile</span>
-                                                <i class="fa fa-user icon_menu icon_menu_active"></i>
-                                            </li>
-
-                                            <li class="tabs-resume hi-icon-wrap hi-icon-effect-5 hi-icon-effect-5a" data-tab-name="resume">
-                                                <span class="tite-list">resume</span>
-                                                <i class="fa fa-tasks icon_menu"></i>
-                                            </li>
-
-                                            <li class="tabs-portfolio hi-icon-wrap hi-icon-effect-5 hi-icon-effect-5a" data-tab-name="portfolio">
-                                                <span class="tite-list">portfolio</span>
-                                                <i class="fa fa-briefcase icon_menu"></i>
-                                            </li>
-
-                                            <li class="tabs-blog hi-icon-wrap hi-icon-effect-5 hi-icon-effect-5a" data-tab-name="blog">
-                                                <span class="tite-list">blog</span>
-                                                <i class="fa fa-bullhorn icon_menu"></i>
-                                            </li>
-
-                                            <li class="tabs-contact hi-icon-wrap hi-icon-effect-5 hi-icon-effect-5a" data-tab-name="contact" style="margin-bottom: 48px !important;">
-                                                <span class="tite-list">contact</span>
-                                                <i class="fa fa-envelope icon_menu"></i>
-                                            </li>
-
-                                            <a href="#" id="print"><i class="fa fa-print icon_print"></i> </a>
-                                            <a href="./SAI_KRISHNA_MOVVA.pdf" id="downlowd" download="SAI_KRISHNA_MOVVA.pdf"><i class="fa fa-download icon_print"></i> </a>
-
-                                        </ul>
-                                        <!-- /resp-tabs-list -->
-
-                                        <!-- resp-tabs-container -->
-                                        <div class="resp-tabs-container">
-
-                                            <!-- profile -->
-                                            <div id="profile" class="content_2">
-                                                <!-- .title -->
-                                                <h1 class="h-bloc">Profile - About Me</h1>
-
-                                                <div class="row top-p">
-                                                    <div class="col-md-6 profile-l">
-
-                                                        <!--About me-->
-                                                        <div class="title_content">
-                                                            <div class="text_content">Sai Movva</div>
-                                                            <div class="clear"></div>
-                                                        </div>
-
-                                                        <ul class="about">
-
-                                                            <li>
-                                                                <i class="glyphicon glyphicon-user"></i>
-                                                                <label>Name</label>
-                                                                <span class="value">Sai Movva</span>
-                                                                <div class="clear"></div>
-                                                            </li>
-
-                                                            <li>
-                                                                <i class="glyphicon glyphicon-calendar"></i>
-                                                                <label>Date of birth</label>
-                                                                <span class="value">August 25, 1995</span>
-                                                                <div class="clear"></div>
-                                                            </li>
-
-                                                            <li>
-                                                                <i class="glyphicon glyphicon-map-marker"></i>
-                                                                <label>Address</label>
-                                                                <span class="value">Hyderabad, IN</span>
-                                                                <div class="clear"></div>
-                                                            </li>
-
-                                                            <li>
-                                                                <i class="glyphicon glyphicon-envelope"></i>
-                                                                <label>Email</label>
-                                                                <span class="value">krishnaatbits@gmail.com</span>
-                                                                <div class="clear"></div>
-                                                            </li>
-
-                                                            <li>
-                                                                <i class="glyphicon glyphicon-phone"></i>
-                                                                <label>Phone</label>
-                                                                <span class="value">+91-8378988125</span>
-                                                                <div class="clear"></div>
-                                                            </li>
-
-                                                            <li>
-                                                                <i class="glyphicon glyphicon-globe"></i>
-                                                                <label>Website</label>
-                                                                <span class="value"><a href="#" target="_blank">cyb3rh4wk.github.io</a></span>
-                                                                <div class="clear"></div>
-                                                            </li>
-
-                                                        </ul>
-
-
-                                                        <p style="margin-bottom:20px">
-                                                            <i class="fa fa-quote-left"></i>
-                                                            Summary
-                                                        </p>
-
-                                                        <p style="margin-bottom:20px">
-                                                            <i class="fa fa-quote-left"></i>
-                                                            Motivational Saying
-                                                        </p>
-
-                                                    </div>
-                                                    <!-- End left-wrap -->
-
-                                                    <div class="col-md-6 profile-r">
-
-                                                        <div class="cycle-slideshow">
-                                                            <img src="http://placehold.it/348x456" alt="" />
-                                                            <img src="http://placehold.it/348x456" alt="" />
-                                                            <img src="http://placehold.it/348x456" alt="" />
-                                                        </div>
-
-                                                    </div>
-
-                                                </div>
-
-                                                <div class="clear"></div>
-
-
-                                                <div class="row" id="services">
-                                                    <div class="col-md-12">
-                                                        <div class="title_content">
-                                                            <div class="text_content">Previous Work Places</div>
-                                                            <div class="clear"></div>
-                                                        </div>
-
-
-                                                        <div class="col-md-4 pack-service">
-                                                            <div class="service">
-                                                                <center><img src="images/ofss.jpg" width="200px" height="100px" alt="OFSS" /></i></center>
-                                                                <div class="service-detail">
-                                                                    <h6>Intern</h6>
-                                                                    <p>Oracle Financial Services Software Ltd, Bangalore</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-4 pack-service">
-                                                            <div class="service">
-                                                                <center><img src="images/sendmykart.png" width="100px" height="100px" alt="OFSS" /></i></center>
-                                                                <div class="service-detail">
-                                                                    <h6>Full Stack Web Developer</h6>
-                                                                    <p>SendMyKart Ltd</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-4 pack-service">
-                                                            <div class="service">
-                                                                <center><img src="images/gmr.png" width="200px" height="100px" alt="OFSS" /></i></center>
-                                                                <div class="service-detail">
-                                                                    <h6>Web Development Intern</h6>
-                                                                    <p>GMR Varalakshmi Foundation, Hyderabad</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div><!-- End Services -->
-
-
-                                                <div class="clear"></div>
-                                                <div class="border-list"></div>
-
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <div class="bottom-p">
-                                                            <div class="title_content">
-                                                                <div class="text_content">PREVIOUS WORK DESCRIPTION</div>
-                                                                <div class="clear"></div>
-                                                            </div>
-
-                                                            <div class="panel-group" id="accordion">
-                                                                <div class="panel panel-default">
-                                                                    <div class="panel-heading">
-                                                                        <h4 class="panel-title">
-                                                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="collapse_tabs">
-                                                                                Intern, Oracle Financial Services Software Ltd, Bangalore
-                                                                                <i class="glyphicon glyphicon-chevron-up" style="float: right;font-size: 13px;"></i>
-                                                                            </a>
-                                                                        </h4>
-                                                                    </div>
-                                                                    <div id="collapseOne" class="panel-collapse collapse in">
-                                                                        <div class="panel-body">
-                                                                            <i class="fa fa-quote-left"></i>  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="panel panel-default">
-                                                                    <div class="panel-heading">
-                                                                        <h4 class="panel-title">
-                                                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="collapse_tabs">
-                                                                                Full Stack Web Developer, SendMykart Ltd
-                                                                                <i class="glyphicon glyphicon-chevron-down" style="float: right;font-size: 13px;"></i>
-                                                                            </a>
-                                                                        </h4>
-                                                                    </div>
-                                                                    <div id="collapseTwo" class="panel-collapse collapse">
-                                                                        <div class="panel-body">
-                                                                            <i class="fa fa-quote-left"></i>  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="panel panel-default">
-                                                                    <div class="panel-heading">
-                                                                        <h4 class="panel-title">
-                                                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" class="collapse_tabs">
-                                                                                Web Development Intern, GMR Varalakshmi Foundation
-                                                                                <i class="glyphicon glyphicon-chevron-down" style="float: right;font-size: 13px;"></i>
-                                                                            </a>
-                                                                        </h4>
-                                                                    </div>
-                                                                    <div id="collapseThree" class="panel-collapse collapse">
-                                                                        <div class="panel-body">
-                                                                            <i class="fa fa-quote-left"></i>  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="clear"></div>
-
-                                            </div>
-                                            <!-- End .profile -->
-
-                                            <!-- .resume -->
-                                            <div id="resume" class="content_2">
-                                                <!-- .title -->
-                                                <h1 class="h-bloc">Resume - Personal Info</h1>
-
-                                                <div class="row">
-
-                                                    <!-- .resume-right -->
-                                                    <div class="col-md-6">
-
-                                                        <!-- .title_content -->
-                                                        <div class="title_content" style="float: none;">
-                                                            <div class="text_content">Software Design skills</div>
-                                                            <div class="clear"></div>
-                                                        </div>
-                                                        <!-- /.title_content -->
-
-                                                        <div class="skills">
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix" data-percent="100%">
-                                                                <div class="skillbar-title"><span>Unified Modelling Language</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-
-                                                            <!-- /.skillbar -->
-
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix" data-percent="100%">
-                                                                <div class="skillbar-title"><span>Design &amp; Architectural Patterns</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix" data-percent="100%">
-                                                                <div class="skillbar-title"><span>Work, Data &amp; Proccess Flow Modelling</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                        </div>
-
-                                                        <!-- .title_content -->
-                                                        <div class="title_content" style="float: none;">
-                                                            <div class="text_content">Domain Specific Skills</div>
-                                                            <div class="clear"></div>
-                                                        </div>
-                                                        <!-- /.title_content -->
-
-                                                        <div class="skills">
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix " data-percent="100%">
-                                                                <div class="skillbar-title"><span>Data Structures &amp; Algorithms</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix " data-percent="100%">
-                                                                <div class="skillbar-title"><span>Cloud Computing</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix " data-percent="100%">
-                                                                <div class="skillbar-title"><span>Networks &amp; Network Architecture</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix " data-percent="100%">
-                                                                <div class="skillbar-title"><span>Parallel Computing</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix " data-percent="100%">
-                                                                <div class="skillbar-title"><span>Machine Learning</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix " data-percent="100%">
-                                                                <div class="skillbar-title"><span>Distributed Computing</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                        </div>
-
-                                                        <!-- .title_content -->
-                                                        <div class="title_content" style="float: none;">
-                                                            <div class="text_content">Programming Skills</div>
-                                                            <div class="clear"></div>
-                                                        </div>
-                                                        <!-- /.title_content -->
-
-                                                        <div class="skills">
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix" data-percent="100%">
-                                                                <div class="skillbar-title"><span>C/C++</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix" data-percent="100%">
-                                                                <div class="skillbar-title"><span>Java SE &amp; Java EE</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix" data-percent="100%">
-                                                                <div class="skillbar-title"><span>Python</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix" data-percent="100%">
-                                                                <div class="skillbar-title"><span>R</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix" data-percent="100%">
-                                                                <div class="skillbar-title"><span>SQL</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix" data-percent="100%">
-                                                                <div class="skillbar-title"><span>HTML &amp; CSS</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix" data-percent="100%">
-                                                                <div class="skillbar-title"><span>JavaScript &amp; jQuery</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix" data-percent="100%">
-                                                                <div class="skillbar-title"><span>PHP</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix" data-percent="100%">
-                                                                <div class="skillbar-title"><span>Node.js</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix" data-percent="100%">
-                                                                <div class="skillbar-title"><span>Shell Scripting</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix" data-percent="100%">
-                                                                <div class="skillbar-title"><span>Assembly Language</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                        </div>
-
-
-                                                        <!-- .title_content -->
-                                                        <div class="title_content" style="float: none;">
-                                                            <div class="text_content">Office Skills</div>
-                                                            <div class="clear"></div>
-                                                        </div>
-                                                        <!-- /.title_content -->
-
-                                                        <div class="skills">
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix" data-percent="100%">
-                                                                <div class="skillbar-title"><span>MS Excel</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix " data-percent="100%">
-                                                                <div class="skillbar-title"><span>MS Word</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix " data-percent="100%">
-                                                                <div class="skillbar-title"><span>MS Powerpoint</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix " data-percent="100%">
-                                                                <div class="skillbar-title"><span>MS Project</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                        </div>
-
-
-                                                        <!-- .title_content -->
-                                                        <div class="title_content" style="float: none;">
-                                                            <div class="text_content">Hobbies</div>
-                                                            <div class="clear"></div>
-                                                        </div>
-                                                        <!-- /.title_content -->
-
-                                                        <div class="skills">
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix " data-percent="100%">
-                                                                <div class="skillbar-title"><span>Video Games</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix " data-percent="100%">
-                                                                <div class="skillbar-title"><span>Travelling</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix " data-percent="100%">
-                                                                <div class="skillbar-title"><span>Creating new food recipes</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix " data-percent="100%">
-                                                                <div class="skillbar-title"><span>Photography</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                        </div>
-
-
-                                                        <!-- .title_content -->
-                                                        <div class="title_content" style="float: none;">
-                                                            <div class="text_content">Language Skills</div>
-                                                            <div class="clear"></div>
-                                                        </div>
-                                                        <!-- /.title_content -->
-
-                                                        <div class="skills">
-                                                            <!-- .skillbar -->
-                                                            <div class="skillbar clearfix " data-percent="100%">
-                                                                <div class="skillbar-title"><span>English</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar --><!-- .skillbar -->
-                                                            <div class="skillbar clearfix " data-percent="100%">
-                                                                <div class="skillbar-title"><span>Hindi</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar --><!-- .skillbar -->
-                                                            <div class="skillbar clearfix " data-percent="100%">
-                                                                <div class="skillbar-title"><span>Telugu</span></div>
-                                                                <div class="skillbar-bar"></div>
-                                                            </div>
-                                                            <!-- /.skillbar -->
-                                                        </div>
-
-
-                                                        <!-- .title_content -->
-                                                        <div class="title_content" style="float: none;">
-                                                            <div class="text_content">My Resume</div>
-                                                            <div class="clear"></div>
-                                                        </div>
-                                                        <!-- /.title_content -->
-
-                                                        <!-- .download_resume -->
-                                                        <a class="download" style="margin:0;float: left;" href="./SAI_KRISHNA_MOVVA.pdf" download="SAI_KRISHNA_MOVVA.pdf">
-                                                            <span data-hover="Download My Resume"><i class="glyphicon glyphicon-download-alt"></i> Download My Resume</span>
-                                                        </a>
-                                                        <!-- /.download_resume -->
-
-                                                    </div>
-                                                    <!-- /.resume-right -->
-
-
-
-                                                    <!-- .resume-left -->
-                                                    <div class="col-md-6 resume-left">
-                                                        <!-- .title_content -->
-                                                        <div class="title_content" style="margin-bottom:5px">
-                                                            <div class="text_content">Experience</div>
-                                                            <div class="clear"></div>
-                                                        </div>
-                                                        <!-- /.title_content -->
-
-                                                        <!-- .attributes -->
-                                                        <ul class="attributes">
-                                                            <li class="first">
-                                                                <h5>Web Developer <span class="duration"><i class="fa fa-calendar color"></i> 2011 - 2013</span></h5>
-                                                                <h6><span class="fa fa-briefcase"></span> Name of Company</h6>
-                                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscingVivamus sit amet ligula non lectus cursus egestas. Cras erat lorem, fringilla quis sagittis in, sagittis inNam leo tortor Nam leo tortor Vivamus.</p>
-                                                            </li>
-                                                            <li>
-                                                                <h5>Front-End Developer <span class="duration"><i class="fa fa-calendar color"></i> 2010 - 2011</span></h5>
-                                                                <h6><span class="fa fa-briefcase"></span> Name of Company</h6>
-                                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscingVivamus sit amet ligula non lectus cursus egestas. Cras erat lorem, fringilla quis sagittis in, sagittis inNam leo tortor Nam leo tortor Vivamus.</p>
-                                                            </li>
-
-                                                        </ul>
-                                                        <!-- /.attributes -->
-                                                        <br>
-
-                                                        <!-- .title_content -->
-                                                        <div class="title_content">
-                                                            <div class="text_content">Education</div>
-                                                            <div class="clear"></div>
-                                                        </div>
-                                                        <!-- /.title_content -->
-
-                                                        <!-- .attributes -->
-                                                        <ul class="attributes">
-                                                            <li class="first">
-                                                                <h5>Master of Engineering <span class="duration"><i class="fa fa-calendar color"></i> 2011 - 2013</span></h5>
-                                                                <h6><span class="fa fa-book"></span> Name of University</h6>
-                                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscingVivamus sit amet ligula non lectus cursus egestas. Cras erat lorem, fringilla quis sagittis in, sagittis inNam leo tortor Nam leo tortor Vivamus.</p>
-                                                            </li>
-                                                            <li>
-                                                                <h5>Bachelor of Engineering <span class="duration"><i class="fa fa-calendar color"></i> 2010 - 2011</span></h5>
-                                                                <h6><span class="fa fa-book"></span> Name of University</h6>
-                                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscingVivamus sit amet ligula non lectus cursus egestas. Cras erat lorem, fringilla quis sagittis in, sagittis inNam leo tortor Nam leo tortor Vivamus.</p>
-                                                            </li>
-                                                        </ul>
-                                                        <!-- /.attributes -->
-                                                        <br>
-
-
-                                                        <!-- .title_content -->
-                                                        <div class="title_content">
-                                                            <div class="text_content">Awards</div>
-                                                            <div class="clear"></div>
-                                                        </div>
-                                                        <!-- /.title_content -->
-
-                                                        <!-- .attributes -->
-                                                        <ul class="attributes">
-                                                            <li class="first">
-                                                                <h5>Graphic &amp; Art Direction <span class="duration"><i class="fa fa-calendar color"></i> 2013 - 2014</span></h5>
-                                                                <h6><span class="fa fa-trophy"></span> Name of Institute</h6>
-                                                                <p>Emi Phasellus congue auctor risuspon, eget males. Pellentes que un imperdiet, odio quis orn sollicitud. Sed vitae lectus elementum mauris.</p>
-                                                            </li>
-                                                            <li>
-                                                                <h5>Design &amp; Art Direction <span class="duration"><i class="fa fa-calendar color"></i> 2012 - 2013</span></h5>
-                                                                <h6><span class="fa fa-trophy"></span> Name of Institute</h6>
-                                                                <p>Emi Phasellus congue auctor risuspon, eget males. Pellentes que un imperdiet, odio quis orn sollicitud. Sed vitae lectus elementum mauris.</p>
-                                                            </li>
-
-                                                        </ul>
-                                                        <!-- /.attributes -->
-                                                        <br>
-
-                                                    </div>
-                                                    <!-- /.resume-left -->
-                                                </div>
-
-                                                <div style="clear: both"></div>
-
-
-                                                <!-- client reference -->
-                                                <div class="row">
-                                                    <div class="col-md-12">
-
-                                                        <div class="reference clearfix">
-
-                                                            <!-- .title_content -->
-                                                            <div class="title_content" style="margin-bottom:5px">
-                                                                <div class="text_content">Mentor/Employer reference</div>
-                                                                <div class="clear"></div>
-                                                            </div>
-                                                            <!-- /.title_content -->
-
-
-                                                            <ul>
-                                                                <li class="clearfix">
-                                                                    <img src="http://placehold.it/100x100" class="img_reference" width="100" height="100" alt="">
-                                                                    <p>“Many desktop publishing packages and web page editors now use Lorem Ipsum as their default will model text, and a search for 'lorem ipsum' hope is uncover many web sites still”</p>
-                                                                    <span>John Doe, UX Designer</span>
-                                                                </li>
-                                                                <li class="clearfix">
-                                                                    <img src="http://placehold.it/100x100" class="img_reference" width="100" height="100" alt="">
-                                                                    <p>“very nice colleague she always helped me out if i didnt know something editors now use Lorem Ipsum as their default”</p>
-                                                                    <span>Leia Calvi, UX Designer</span>
-                                                                </li>
-                                                                <li class="clearfix">
-                                                                    <img src="http://placehold.it/100x100" class="img_reference" width="100" height="100" alt="">
-                                                                    <p>“old colleague and now close friend, she is really sweet and helpfull packages and web page editors now use Lorem Ipsum as their default will model text”</p>
-                                                                    <span>Maria Callas, UX Designer</span>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-
-
-
-
-                                                    <div style="clear: both"></div>
-                                                </div>
-
-
-                                            </div>
-                                            <!-- End .resume -->
-
-                                            <!-- .portfolio -->
-                                            <div id="portfolio" class="content_2">
-                                                <!-- .title -->
-                                                <h1 class="h-bloc">Portfolio - My Works</h1>
-
-                                                <!-- .container-portfolio -->
-                                                <div class="container-portfolio">
-
-                                                    <!-- #filters -->
-                                                    <ul id="filters" class="clearfix">
-                                                        <li><span class="filter active" data-filter="catWeb catGraphic catMotion logo">All</span></li>
-                                                        <li><span class="filter" data-filter="catWeb">Web Design</span></li>
-                                                        <li><span class="filter" data-filter="catGraphic">Graphic Design</span></li>
-                                                        <li><span class="filter" data-filter="catMotion">Motion Graphic</span></li>
-                                                        <li><span class="filter" data-filter="logo">Logo</span></li>
-                                                    </ul>
-                                                    <!-- /#filters -->
-
-                                                    <!-- #portfoliolist -->
-                                                    <div id="portfoliolist">
-
-                                                        <!-- .portfolio -->
-                                                        <div class="portfolio logo" data-cat="logo">
-                                                            <!-- .portfolio-wrapper -->
-                                                            <div class="portfolio-wrapper">
-                                                                <a href="http://placehold.it/600x849" rel="portfolio" title="Lorem ipsum dolor sit amet, consectetur adipiscing Vivamus sit amet ligula non lectus.consectetur adipiscingVivamus sit amet">
-                                                                    <img src="http://placehold.it/600x849" alt="Visual Infography" />
-                                                                    <div class="label">
-                                                                        <div class="label-text">
-                                                                            <a class="text-title">Project Name</a>
-                                                                            <span class="text-category">Logo</span>
-                                                                        </div>
-                                                                        <div class="label-bg"></div>
-                                                                    </div>
-                                                                </a>
-                                                            </div>
-                                                            <!-- /.portfolio-wrapper -->
-                                                        </div>
-                                                        <!-- /.portfolio -->
-
-
-
-                                                        <!-- .portfolio -->
-                                                        <div class="portfolio catWeb" data-cat="catWeb">
-                                                            <!-- .portfolio-wrapper -->
-                                                            <div class="portfolio-wrapper">
-                                                                <a href="http://www.youtube.com/watch?v=c9MnSeYYtYY" rel="portfolio">
-
-                                                                    <img src="http://placehold.it/600x849" alt="Visual Infography" />
-                                                                    <div class="label">
-                                                                        <div class="label-text">
-                                                                            <a class="text-title">Project Name</a>
-                                                                            <span class="text-category">Web Design</span>
-                                                                        </div>
-                                                                        <div class="label-bg"></div>
-                                                                    </div>
-                                                                </a>
-                                                            </div>
-                                                            <!-- /.portfolio-wrapper -->
-                                                        </div>
-                                                        <!-- /.portfolio -->
-
-                                                        <!-- .portfolio -->
-                                                        <div class="portfolio catWeb" data-cat="catWeb">
-                                                            <!-- .portfolio-wrapper -->
-                                                            <div class="portfolio-wrapper">
-                                                                <a href="http://placehold.it/600x849" rel="portfolio">
-                                                                    <img src="http://placehold.it/600x849" alt="Sonor's Design" />
-                                                                    <div class="label">
-                                                                        <div class="label-text">
-                                                                            <a class="text-title">Project Name</a>
-                                                                            <span class="text-category">Web design</span>
-                                                                        </div>
-                                                                        <div class="label-bg"></div>
-                                                                    </div>
-                                                                </a>
-                                                            </div>
-                                                            <!-- /.portfolio-wrapper -->
-                                                        </div>
-                                                        <!-- /.portfolio -->
-
-                                                        <!-- .portfolio -->
-                                                        <div class="portfolio catMotion" data-cat="catMotion">
-                                                            <!-- .portfolio-wrapper -->
-                                                            <div class="portfolio-wrapper">
-                                                                <a href="http://placehold.it/600x849" rel="portfolio">
-                                                                    <img src="http://placehold.it/600x849" alt="Typography Company" />
-                                                                    <div class="label">
-                                                                        <div class="label-text">
-                                                                            <a class="text-title">Project Name</a>
-                                                                            <span class="text-category">Motion Graphic</span>
-                                                                        </div>
-                                                                        <div class="label-bg"></div>
-                                                                    </div>
-                                                                </a>
-                                                            </div>
-                                                            <!-- /.portfolio-wrapper -->
-                                                        </div>
-                                                        <!-- /.portfolio -->
-
-                                                        <!-- .portfolio -->
-                                                        <div class="portfolio catWeb" data-cat="catWeb">
-                                                            <!-- .portfolio-wrapper -->
-                                                            <div class="portfolio-wrapper">
-                                                                <a href="http://placehold.it/600x849" title="Etiam quis mi eu elit tempor facilisis id et neque. Nulla sit amet sem sapien." rel="portfolio">
-                                                                    <img src="http://placehold.it/600x849" alt="Weatherette" />
-                                                                    <div class="label">
-                                                                        <div class="label-text">
-                                                                            <a class="text-title">Project Name</a>
-                                                                            <span class="text-category">Web Design</span>
-                                                                        </div>
-                                                                        <div class="label-bg"></div>
-                                                                    </div>
-                                                                </a>
-                                                            </div>
-                                                            <!-- /.portfolio-wrapper -->
-                                                        </div>
-                                                        <!-- /.portfolio -->
-
-                                                        <!-- .portfolio -->
-                                                        <div class="portfolio catMotion" data-cat="catMotion">
-                                                            <!-- .portfolio-wrapper -->
-                                                            <div class="portfolio-wrapper">
-                                                                <a href="http://placehold.it/600x849" rel="portfolio">
-                                                                    <img src="http://placehold.it/600x849" alt="BMF" />
-                                                                    <div class="label">
-                                                                        <div class="label-text">
-                                                                            <a class="text-title">Project Name</a>
-                                                                            <span class="text-category">Motion Graphic</span>
-                                                                        </div>
-                                                                        <div class="label-bg"></div>
-                                                                    </div>
-                                                                </a>
-                                                            </div>
-                                                            <!-- /.portfolio-wrapper -->
-                                                        </div>
-                                                        <!-- /.portfolio -->
-
-                                                        <!-- .portfolio -->
-                                                        <div class="portfolio catGraphic" data-cat="catGraphic">
-                                                            <!-- .portfolio-wrapper -->
-                                                            <div class="portfolio-wrapper">
-                                                                <a href="http://placehold.it/600x849" title="Etiam quis mi eu elit tempor facilisis id et neque. Nulla sit amet sem sapien." rel="portfolio">
-                                                                    <img src="http://placehold.it/600x849" alt="Techlion" />
-                                                                    <div class="label">
-                                                                        <div class="label-text">
-                                                                            <a class="text-title">Project Name</a>
-                                                                            <span class="text-category">Graphic Design</span>
-                                                                        </div>
-                                                                        <div class="label-bg"></div>
-                                                                    </div>
-                                                                </a>
-                                                            </div>
-                                                            <!-- /.portfolio-wrapper -->
-                                                        </div>
-                                                        <!-- /.portfolio -->
-
-                                                        <!-- .portfolio -->
-                                                        <div class="portfolio logo" data-cat="logo">
-                                                            <!-- .portfolio-wrapper -->
-                                                            <div class="portfolio-wrapper">
-                                                                <a href="http://placehold.it/600x849" rel="portfolio" title="Etiam quis mi eu elit tempor facilisis id et neque. Nulla sit amet sem sapien.">
-                                                                    <img src="http://placehold.it/600x849" alt="KittyPic" />
-                                                                    <div class="label">
-                                                                        <div class="label-text">
-                                                                            <a class="text-title">Project Name</a>
-                                                                            <span class="text-category">Logo</span>
-                                                                        </div>
-                                                                        <div class="label-bg"></div>
-                                                                    </div>
-                                                                </a>
-                                                            </div>
-                                                            <!-- /.portfolio-wrapper -->
-                                                        </div>
-                                                        <!-- /.portfolio -->
-
-                                                        <!-- .portfolio -->
-                                                        <div class="portfolio catWeb" data-cat="catWeb">
-                                                            <!-- .portfolio-wrapper -->
-                                                            <div class="portfolio-wrapper">
-                                                                <a href="http://placehold.it/600x849" title="Etiam quis mi eu elit tempor facilisis id et neque. Nulla sit amet sem sapien." rel="portfolio">
-                                                                    <img src="http://placehold.it/600x849" alt="Graph Plotting" />
-                                                                    <div class="label">
-                                                                        <div class="label-text">
-                                                                            <a class="text-title">Project Name</a>
-                                                                            <span class="text-category">Web Design</span>
-                                                                        </div>
-                                                                        <div class="label-bg"></div>
-                                                                    </div>
-                                                                </a>
-                                                            </div>
-                                                            <!-- /.portfolio-wrapper -->
-                                                        </div>
-                                                        <!-- /.portfolio -->
-
-                                                        <!-- .portfolio -->
-                                                        <div class="portfolio catGraphic" data-cat="catGraphic">
-                                                            <!-- .portfolio-wrapper -->
-                                                            <div class="portfolio-wrapper">
-                                                                <a href="http://placehold.it/600x849" rel="portfolio">
-                                                                    <img src="http://placehold.it/600x849" alt="QR Quick Response" />
-                                                                    <div class="label">
-                                                                        <div class="label-text">
-                                                                            <a class="text-title">Project Name</a>
-                                                                            <span class="text-category">Graphic Design</span>
-                                                                        </div>
-                                                                        <div class="label-bg"></div>
-                                                                    </div>
-                                                                </a>
-                                                            </div>
-                                                            <!-- /.portfolio-wrapper -->
-                                                        </div>
-                                                        <!-- /.portfolio -->
-
-                                                        <!-- .portfolio -->
-                                                        <div class="portfolio logo" data-cat="logo">
-                                                            <!-- .portfolio-wrapper -->
-                                                            <div class="portfolio-wrapper">
-                                                                <a href="http://placehold.it/600x849" title="Etiam quis mi eu elit tempor facilisis id et neque. Nulla sit amet sem sapien." rel="portfolio">
-                                                                    <img src="http://placehold.it/600x849" alt="Mobi Sock" />
-                                                                    <div class="label">
-                                                                        <div class="label-text">
-                                                                            <a class="text-title">Project Name</a>
-                                                                            <span class="text-category">Logo</span>
-                                                                        </div>
-                                                                        <div class="label-bg"></div>
-                                                                    </div>
-                                                                </a>
-                                                            </div>
-                                                            <!-- /.portfolio-wrapper -->
-                                                        </div>
-                                                        <!-- /.portfolio -->
-
-                                                        <!-- .portfolio -->
-                                                        <div class="portfolio logo" data-cat="logo">
-                                                            <!-- .portfolio-wrapper -->
-                                                            <div class="portfolio-wrapper">
-                                                                <a href="http://placehold.it/600x849" rel="portfolio">
-                                                                    <img src="http://placehold.it/600x849" alt="Village Community Church" />
-                                                                    <div class="label">
-                                                                        <div class="label-text">
-                                                                            <a class="text-title">Project Name</a>
-                                                                            <span class="text-category">Logo</span>
-                                                                        </div>
-                                                                        <div class="label-bg"></div>
-                                                                    </div>
-                                                                </a>
-                                                            </div>
-                                                            <!-- /.portfolio-wrapper -->
-                                                        </div>
-                                                        <!-- /.portfolio -->
-
-                                                        <div class="clear"></div>
-
-                                                    </div>
-                                                    <!-- #portfoliolist -->
-                                                </div>
-                                                <!-- /.container-portfolio -->
-                                            </div>
-                                            <!-- End .portfolio -->
-
-                                            <!-- .blog -->
-                                            <div id="blog" class="content_2">
-                                                <h1 class="h-bloc">Blog - My Blog</h1><br>
-
-                                                <div class="col-md-12">
-                                                    <div class="row">
-                                                        <p>Coming soon.....!!!</p>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                            <!-- End .blog -->
-
-                                            <!-- .contact -->
-                                            <div id="contact" class="content_2">
-
-                                                <h1 class="h-bloc">Contact - Contact Me</h1>
-
-
-                                                <div class="row">
-
-                                                    <div class="col-lg-12">
-                                                        <div id="map"></div>
-                                                    </div>
-
-                                                    <div class="col-lg-12">
-                                                        <div class="row" id="contact-user">
-                                                            <div class="col-md-5">
-                                                                <div class="contact-info">
-                                                                    <!--<h3 class="main-heading"><span>Contact info</span></h3>-->
-
-                                                                    <div class="title_content" style="float: none;">
-                                                                        <div class="text_content">Contact info</div>
-                                                                        <div class="clear"></div>
-                                                                    </div>
-
-                                                                    <ul>
-                                                                        <li><span class="span-info"><i class="glyphicon glyphicon-map-marker"></i> Adress:</span> Hyderabad, IN.<br /><br /></li>
-                                                                        <li><span class="span-info"><i class="glyphicon glyphicon-envelope"></i> Email:</span> krishnaatbits@gmail.com</li>
-                                                                        <li><span class="span-info"><i class="glyphicon glyphicon-phone"></i> Phone:</span> +91-8378988125</li>
-                                                                        <li><span class="span-info"><i class="glyphicon glyphicon-globe"></i> Website:</span> <a href="http://cyb3rh4wk.github.io">cyb3rh4wk.github.io</a></li>
-                                                                    </ul>
-                                                                </div>
-                                                                <!-- /Contact Info -->
-                                                                <div class="clear"></div>
-
-                                                                <!--<h3 class="main-heading" style="margin-left: 22px;"><span>Follow me</span></h3>-->
-
-                                                                <div class="title_content tiltle_contacts" style="float: none;">
-                                                                    <div class="text_content">Follow me</div>
-                                                                    <div class="clear"></div>
-                                                                </div>
-
-
-
-                                                                <div id="profile_social">
-                                                                    <a href="https://www.facebook.com/sudoprince"><i class="fa fa-facebook"></i></a>
-                                                                    <a href="http://www.linkedin.com/in/cyb3rh4wk"><i class="fa fa-linkedin"></i></a>
-                                                                    <div class="clear"></div>
-                                                                </div>
-
-
-
-                                                            </div>
-
-                                                            <div class="col-md-7">
-                                                                <!-- Contact Form -->
-                                                                <div class="title_content" style="float: none;">
-                                                                    <div class="text_content">Let's keep in touch</div>
-                                                                    <div class="clear"></div>
-                                                                </div>
-
-                                                                <div class="contact-form">
-                                                                    <!--<h3 class="main-heading"><span>Let's keep in touch</span></h3>-->
-
-
-
-                                                                    <div id="contact-status"></div>
-
-                                                                    <form action="" id="contactform">
-                                                                        <p class="form-group" id="contact-name">
-                                                                            <label for="name">Your Name</label>
-                                                                            <input type="text" name="name" class="form-control name-contact" id="inputSuccess" placeholder="Name..." />
-                                                                        </p>
-                                                                        <p class="form-group" id="contact-email">
-                                                                            <label for="email">Your Email</label>
-                                                                            <input type="text" name="email" class="form-control email-contact" id="inputSuccess" placeholder="Email..." />
-                                                                        </p>
-
-                                                                        <p class="form-group" id="contact-message">
-                                                                            <label for="message">Your Message</label>
-                                                                            <textarea name="message" cols="88" rows="6" class="form-control message-contact" id="inputError" placeholder="Message..."></textarea>
-                                                                        </p>
-                                                                        <input type="reset" name="reset" value="CLEAR" class="reset">
-                                                                        <!-- <input type="submit" name="submit" value="SEND MESSAGE" class="submit">-->
-
-                                                                        <section class="button-demo" style="display: inline-block;">
-                                                                            <button class="ladda-button submit send_email" name="submit" data-color="green" data-style="expand-left">SEND MESSAGE</button>
-                                                                        </section>
-
-                                                                    </form>
-                                                                </div>
-                                                                <!-- /Contact Form -->
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                            <!-- End .contact -->
-
-                                        </div>
-                                        <!-- End #resp-tabs-container -->
-
-                                    </div><!-- End verticalTab -->
-
-                                </div><!-- End flexy_content -->
-
-
-                            </div><!-- End row -->
-
-                        </div><!-- End col-md-12 -->
-
-                    </div><!-- End row -->
-
-                </div><!-- End container -->
-
-            </section>
-            <!-- End Content -->
-
-        </div>
-        <!-- End wrapper -->
-
-
-        <!-- jquery | jQuery 1.11.0 -->
-        <!-- Credits: http://jquery.com -->
-        <script type="text/javascript" src="js/jquery.min.js"></script>
-
-        <!-- Js | bootstrap -->
-        <!-- Credits: http://getbootstrap.com/ -->
-        <script type="text/javascript" src="js/bootstrap.min.js"></script>
-
-        <!-- Js | jquery.cycle -->
-        <!-- Credits: https://github.com/malsup/cycle2 -->
-        <script type="text/javascript" src="js/jquery.cycle2.min.js"></script>
-
-        <!-- jquery | rotate and portfolio -->
-        <!-- Credits: http://jquery.com -->
-        <script type="text/javascript" src="js/jquery.mixitup.min.js"></script>
-        <script type="text/javascript" src="js/HeadImage.js"></script>
-
-        <!-- Js | easyResponsiveTabs -->
-        <!-- Credits: http://webtrendset.com/demo/easy-responsive-tabs/Index.html -->
-        <script type="text/javascript" src="js/easyResponsiveTabs.min.js"></script>
-
-        <!-- Js | mCustomScrollbar -->
-        <!-- Credits: http://manos.malihu.gr/jquery-custom-content-scroller -->
-        <script type="text/javascript" src="js/jquery.mCustomScrollbar.concat.min.js"></script>
-
-        <!-- jquery | prettyPhoto -->
-        <!-- Credits: http://www.no-margin-for-errors.com/ -->
-        <script type="text/javascript" src="js/jquery.prettyPhoto.js"></script>
-
-        <!-- Js | gmaps -->
-        <!-- Credits: http://maps.google.com/maps/api/js?sensor=true-->
-        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
-        <script type="text/javascript" src="js/gmaps.min.js"></script>
-
-        <!-- Js | Js -->
-        <!-- Credits: http://themeforest.net/user/FlexyCodes -->
-        <script type="text/javascript" src="js/main.js"></script>
-
-        <!-- code js for image rotate -->
-        <script type="text/javascript">
-
-            var mouseX;
-            var mouseY;
-            var imageOne;
-
-            /* Calling the initialization function */
-            $(init);
-
-            /* The images need to re-initialize on load and on resize, or else the areas
-             * where each image is displayed will be wrong. */
-            $(window).load(init);
-            $(window).resize(init);
-
-            /* Setting the mousemove event caller */
-            $(window).mousemove(getMousePosition);
-
-            /* This function is called on document ready, on load and on resize
-             * and initiallizes all the images */
-            function init() {
-
-                /* Instanciate the mouse position variables */
-                mouseX = 0;
-                mouseY = 0;
-
-                /* Instanciate a HeadImage class for every image */
-                imageOne = new HeadImage("one");
-
-            }
-
-            /* This function is called on mouse move and gets the mouse position.
-             * It also calls the HeadImage function to display the correct image*/
-            function getMousePosition(event) {
-
-                /* Setting the mouse position variables */
-                mouseX = event.pageX;
-                mouseY = event.pageY;
-
-                /*Calling the setImageDirection function of the HeadImage class
-                 * to display the correct image*/
-                imageOne.setImageDirection();
-
-            }
-
-        </script>
-
-
-        <!--[if lt IE 9]>
-            <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
-    </body>
+          };
+          const interval = setInterval(draw, 33);
+          return () => clearInterval(interval);
+        }, []);
+        return React.createElement('canvas', {
+          ref: canvasRef,
+          style: { position: 'fixed', top: 0, left: 0, zIndex: 9997, pointerEvents: 'none' }
+        });
+      };
+
+      return React.createElement('div', { style: termStyles.wrapper, onClick: focusInput },
+        React.createElement('div', { style: termStyles.topBar },
+          React.createElement('div', { style: { display: 'flex', gap: '12px', alignItems: 'center' } },
+            React.createElement('span', { style: { color: DRACULA.green } }, '⬤'),
+            React.createElement('span', { style: { color: DRACULA.yellow } }, '⬤'),
+            React.createElement('span', { style: { color: DRACULA.red } }, '⬤'),
+            React.createElement('span', { style: { color: DRACULA.comment, marginLeft: '8px' } }, 'sai@portfolio: ~'),
+          ),
+          React.createElement('div', { style: { color: DRACULA.comment } },
+            React.createElement(GlitchText, null, 'SAI MOVVA — Principal Software Engineer')
+          )
+        ),
+
+        React.createElement('div', { style: termStyles.body },
+          React.createElement('div', { style: termStyles.sidebar },
+            React.createElement('div', {
+              style: termStyles.sidebarHeader,
+              onClick: () => setSidebarCollapsed(prev => !prev)
+            },
+              !sidebarCollapsed && React.createElement('span', null, '📁 EXPLORER'),
+              React.createElement('span', null, sidebarCollapsed ? '▸' : '▾')
+            ),
+            !sidebarCollapsed && React.createElement('div', { style: { flex: 1, padding: '4px 0', display: 'flex', flexDirection: 'column', overflow: 'hidden' } },
+              React.createElement('div', { style: { flex: 1, overflow: 'auto' } },
+                React.createElement('div', { style: { padding: '6px 12px', color: DRACULA.comment, fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px' } }, '~/portfolio'),
+                SECTIONS.map(section =>
+                  React.createElement('div', {
+                    key: section.id,
+                    style: termStyles.navItem(activeSection === section.id),
+                    onClick: () => { setActiveSection(section.id); setShowNeofetch(false); setStatusMsg(''); },
+                    onMouseEnter: e => { if (activeSection !== section.id) e.currentTarget.style.background = 'rgba(68,71,90,0.3)'; },
+                    onMouseLeave: e => { if (activeSection !== section.id) e.currentTarget.style.background = 'transparent'; },
+                  },
+                    React.createElement('span', { style: { width: '22px', textAlign: 'center', fontSize: '18px' } }, section.icon),
+                    React.createElement('span', null, section.label)
+                  )
+                ),
+                React.createElement('div', { style: { padding: '12px 10px', marginTop: '8px', borderTop: `1px solid ${DRACULA.currentLine}` } },
+                  React.createElement('div', { style: { color: DRACULA.comment, fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' } }, 'QUICK CMDS'),
+                  ['systemctl', 'fortune', 'cowsay', 'matrix'].map(cmd =>
+                    React.createElement('div', {
+                      key: cmd,
+                      style: { padding: '4px 12px', cursor: 'pointer', fontSize: '15px', color: DRACULA.orange, transition: 'color 0.15s' },
+                      onClick: () => executeCommand(cmd),
+                      onMouseEnter: e => e.currentTarget.style.color = DRACULA.pink,
+                      onMouseLeave: e => e.currentTarget.style.color = DRACULA.orange,
+                    }, `$ ${cmd}`)
+                  )
+                )
+              ),
+              React.createElement('div', { style: { padding: '12px 10px', borderTop: `1px solid ${DRACULA.currentLine}`, flexShrink: 0 } },
+                React.createElement('div', { style: { color: DRACULA.comment, fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' } }, 'CONNECT'),
+                [
+                  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/cyb3rh4wk', color: DRACULA.cyan,
+                    icon: React.createElement('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'currentColor' },
+                      React.createElement('path', { d: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z' }))
+                  },
+                  { label: 'GitHub', href: 'https://github.com/cyb3rh4wk', color: DRACULA.green,
+                    icon: React.createElement('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'currentColor' },
+                      React.createElement('path', { d: 'M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12' }))
+                  },
+                  { label: 'Email', href: 'mailto:krishnaatbits@gmail.com', color: DRACULA.orange,
+                    icon: React.createElement('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'currentColor' },
+                      React.createElement('path', { d: 'M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 010 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z' }))
+                  },
+                ].map((link, i) =>
+                  React.createElement('a', {
+                    key: i, href: link.href, target: '_blank', rel: 'noopener',
+                    style: {
+                      display: 'flex', alignItems: 'center', gap: '10px', padding: '6px 4px',
+                      color: DRACULA.comment, textDecoration: 'none', fontSize: '15px',
+                      transition: 'color 0.2s',
+                    },
+                    onMouseEnter: e => e.currentTarget.style.color = link.color,
+                    onMouseLeave: e => e.currentTarget.style.color = DRACULA.comment,
+                  }, link.icon, link.label)
+                )
+              )
+            ),
+            sidebarCollapsed && React.createElement('div', { style: { padding: '8px 0' } },
+              SECTIONS.map(section =>
+                React.createElement('div', {
+                  key: section.id,
+                  style: { ...termStyles.navItem(activeSection === section.id), justifyContent: 'center', padding: '6px 4px' },
+                  onClick: () => { setActiveSection(section.id); setShowNeofetch(false); setStatusMsg(''); },
+                  title: section.label,
+                }, section.icon)
+              )
+            )
+          ),
+
+          React.createElement('div', { style: termStyles.content, ref: contentRef },
+            React.createElement('div', { className: 'content-fade-in', key: activeSection }, renderContent())
+          )
+        ),
+
+        statusMsg && React.createElement('div', {
+          style: {
+            padding: '6px 12px', background: 'rgba(52, 55, 70, 0.9)', borderTop: `1px solid ${DRACULA.currentLine}`,
+            fontSize: '14px', color: DRACULA.yellow, whiteSpace: 'pre-wrap', flexShrink: 0,
+          }
+        }, statusMsg),
+
+        React.createElement('div', { style: termStyles.commandBar },
+          React.createElement('span', { style: { color: DRACULA.green, marginRight: '4px' } }, 'sai@portfolio'),
+          React.createElement('span', { style: { color: DRACULA.fg, marginRight: '4px' } }, ':'),
+          React.createElement('span', { style: { color: DRACULA.cyan, marginRight: '4px' } }, '~'),
+          React.createElement('span', { style: { color: DRACULA.fg, marginRight: '8px' } }, '$'),
+          React.createElement('div', { className: 'cmd-input-wrapper' },
+            React.createElement('input', {
+              ref: inputRef,
+              value: inputValue,
+              onChange: e => setInputValue(e.target.value),
+              onKeyDown: handleKeyDown,
+              style: {
+                flex: 1, width: '100%', background: 'transparent', border: 'none', outline: 'none',
+                color: DRACULA.fg, fontFamily: "'Fira Code', monospace", fontSize: '15px',
+                caretColor: 'transparent',
+              },
+              placeholder: "type 'help' for commands...",
+              autoFocus: true,
+              spellCheck: false,
+              autoComplete: 'off',
+            }),
+            React.createElement('span', {
+              className: 'cmd-cursor',
+              style: { left: `${inputValue.length * 9.05}px`, top: '50%', transform: 'translateY(-50%)' },
+            })
+          )
+        ),
+
+        React.createElement('div', { style: termStyles.statusBar },
+          React.createElement('span', null, `[0] sai@portfolio`),
+          React.createElement('span', null, `${activeSection}.view`),
+          React.createElement('span', null, `"sai@portfolio" ${SECTIONS.length} panes`)
+        ),
+
+        React.createElement(Scanlines),
+        React.createElement(CRTFlicker),
+        showMatrix && React.createElement(MatrixOverlay),
+      );
+    }
+
+    // =========================================================================
+    // App — boot gate + terminal
+    // =========================================================================
+    function App() {
+      const [booted, setBooted] = React.useState(false);
+      const [skipBoot] = React.useState(() => {
+        return sessionStorage.getItem('sai-portfolio-booted') === 'true';
+      });
+
+      const handleBootComplete = () => {
+        sessionStorage.setItem('sai-portfolio-booted', 'true');
+        setBooted(true);
+      };
+
+      React.useEffect(() => {
+        const handler = (e) => {
+          if (e.key === 'Escape' && !booted) handleBootComplete();
+        };
+        window.addEventListener('keydown', handler);
+        return () => window.removeEventListener('keydown', handler);
+      }, [booted]);
+
+      if (skipBoot || booted) {
+        return React.createElement('div', { className: 'terminal-enter' },
+          React.createElement(Terminal)
+        );
+      }
+
+      return React.createElement(BootSequence, { onComplete: handleBootComplete });
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(App));
+  </script>
+</body>
 </html>
